@@ -99,3 +99,9 @@ body {
   background: none;
   color: #999;
 }
+
+
+.scale-container {
+  transform: scale(0.73);
+  transform-origin: top center; /* 스케일 줄일 때 기준점 */
+}
