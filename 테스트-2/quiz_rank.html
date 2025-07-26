@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Quiz Rank</title>
+  <style>
+    body {
+      font-family: 'Bitcount Single', system-ui;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+    .ranking-table {
+      display: inline-block;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 10px;
+      min-width: 200px;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+    }
+    th {
+      background-color: #333;
+      color: white;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Rank</h1>
+  <div id="rankings"></div>
+
+  <script>
+    const SHEETS = [
+      {
+        name: "Movie",
+        sheetId: "1BnPMImN_mf_0ZYiVMx-ZZEfNeh16PJLuwZaaRnRlDGI"
+      },
+      {
+        name: "Person",
+        sheetId: "13q5_sJAauQQ3_y55k5KNtRA-lC7abVBq2Qoex8EV0Bg"
+      },
+      {
+        name: "Fairy",
+        sheetId: "1pcK6Ox29o1LqNELREL8s0Avx3i7Vd7wY3pa6ShFqrV8"
+      }
+    ];
+
+    const container = document.getElementById("rankings");
+
+    SHEETS.forEach(sheet => {
+      const url = `https://opensheet.elk.sh/${sheet.sheetId}/1`; // 1 = 첫 시트
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          // 유효한 행만 필터
+          const rows = data.filter(row => row.Nickname && row.Point);
+          // 숫자 내림차순 정렬
+          rows.sort((a, b) => Number(b.Point) - Number(a.Point));
+
+          const table = document.createElement("table");
+          const title = document.createElement("h2");
+          title.textContent = sheet.name;
+
+          const thead = table.createTHead();
+          const headerRow = thead.insertRow();
+          ["Rank", "Nickname", "Point"].forEach(text => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            headerRow.appendChild(th);
+          });
+
+          const tbody = table.createTBody();
+          rows.forEach((row, index) => {
+            const tr = tbody.insertRow();
+            const rankCell = tr.insertCell();
+            rankCell.textContent = `#${index + 1}`;
+            tr.insertCell().textContent = row.Nickname;
+            tr.insertCell().textContent = row.Point;
+          });
+
+          const div = document.createElement("div");
+          div.className = "ranking-table";
+          div.appendChild(title);
+          div.appendChild(table);
+          container.appendChild(div);
+        });
+    });
+  </script>
+</body>
+</html>

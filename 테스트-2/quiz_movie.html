@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Quiz</title>
+  <link rel="stylesheet" href="quiz.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+    .quiz-container img {
+      max-width: 80%;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    .answer-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .answer-buttons button {
+      font-family: 'Bitcount Single', system-ui;
+      font-size: 16px;
+      padding: 10px 20px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .answer-buttons button:hover {
+      background-color: #666;
+    }
+
+    #progress-bar {
+      display: none;
+      width: 80%;
+      height: 15px;
+      background-color: #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 30px;
+    }
+
+    #progress {
+      height: 100%;
+      background-color: #ff4444;
+      width: 100%;
+      transition: width 0.1s linear;
+    }
+
+    .popup, .gameover {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .popup h2, .gameover h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .popup button, .gameover button {
+      font-family: 'Bitcount Single', system-ui;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #222;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 5;
+    }
+
+    .score {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 18px;
+      font-family: 'Bitcount Single', system-ui;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="start-overlay"></div>
+<div class="popup" id="start-popup">
+  <h2>Enter Nickname</h2>
+  <input type="text" id="nickname-input" placeholder="Enter nickname" style="font-size:16px; padding:6px; font-family:'Bitcount Single'">
+  <br><br>
+  <button onclick="startGame()">Start</button>
+</div>
+
+  <div class="quiz-container">
+    <div class="score" id="info-display" style="top: 20px; left: 30px; right: auto;"></div>
+
+    <h1>Movie Quiz</h1>
+    <div class="score" id="score-display" style="display: none;">Point: 0</div>
+
+    <img id="quiz-image" src="" alt="Movie Quiz">
+    <div class="answer-buttons" id="button-container"></div>
+    <div id="progress-bar">
+      <div id="progress"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- 정답/오답 팝업 -->
+  <div class="popup" id="popup">
+    <h2 id="popup-message"></h2>
+    <p id="popup-score"></p>
+    <p id="popup-answer"></p>
+    <button onclick="nextQuestion()">Next Answer</button>
+  </div>
+
+  <!-- 게임 종료 화면 -->
+<div class="gameover" id="gameover">
+  <h2>🎉 Game Over 🎉</h2>
+  <p id="final-score"></p>
+  <button onclick="saveToGoogleSheet()">저장하고 랭크 확인하기</button>
+</div>
+
+  <script>
+    let nickname = "";
+
+    let answerMap = {};
+    let correctAnswer = "";
+    let timer = null;
+    let startTime = null;
+    let totalScore = 0;
+    let hasAnswered = false;
+    let questionCount = 0;
+    const MAX_QUESTIONS = 10;
+    const TIME_LIMIT = 2; // 초 단축
+    let usedFiles = [];
+
+    async function loadAnswerMap() {
+      const response = await fetch('cobubu/quiz/movie/answer.txt');
+      const text = await response.text();
+      const lines = text.trim().split('\n');
+
+      for (let i = 0; i < lines.length; i += 2) {
+        const filename = lines[i].trim();
+        const answer = lines[i + 1].trim();
+        answerMap[filename] = answer;
+      }
+    }
+    function startGame() {
+  const input = document.getElementById("nickname-input").value.trim();
+  if (input === "") {
+    alert("Enter your nickname.");
+    return;
+  }
+  nickname = input;
+
+  document.getElementById("start-popup").style.display = "none";
+  document.getElementById("start-overlay").style.display = "none";
+  document.getElementById("progress-bar").style.display = "block";
+  document.getElementById("score-display").style.display = "block";
+
+  loadAnswerMap().then(loadQuiz);
+
+}
+
+
+    function startTimer(duration) {
+      const progress = document.getElementById("progress");
+      let start = Date.now();
+
+      timer = setInterval(() => {
+        if (hasAnswered) return;
+
+        const elapsed = (Date.now() - start) / 1000;
+        const remaining = Math.max(0, duration - elapsed);
+        const percent = (remaining / duration) * 100;
+        progress.style.width = percent + "%";
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          hasAnswered = true;
+          setTimeout(() => {
+            showPopup("Time Over!", 0, true);
+          }, 100);
+        }
+      }, 50);
+    }
+
+    function showPopup(message, score, showAnswer = false) {
+      clearInterval(timer);
+      document.getElementById("popup-message").textContent = message;
+      document.getElementById("popup-score").textContent = `Get point: ${score}`;
+      document.getElementById("popup-answer").textContent = showAnswer ? `Answer: ${correctAnswer}` : '';
+      document.getElementById("popup").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+
+      if (message === "Correct!") {
+        totalScore += score;
+        document.getElementById("score-display").textContent = `Point : ${totalScore}`;
+      }
+    }
+
+    function nextQuestion() {
+      questionCount++;
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+
+      if (questionCount >= MAX_QUESTIONS || usedFiles.length >= Object.keys(answerMap).length) {
+        document.getElementById("gameover").style.display = "block";
+        document.getElementById("final-score").textContent = `Your Point: ${totalScore}`;
+        return;
+      }
+
+      loadQuiz();
+    }
+
+    function loadQuiz() {
+      document.getElementById("info-display").textContent = `${nickname} (${questionCount + 1}/${MAX_QUESTIONS})`;
+
+      clearInterval(timer);
+      hasAnswered = false;
+      document.getElementById("progress").style.width = "100%";
+
+      // 중복 제거
+      const availableFiles = Object.keys(answerMap).filter(f => !usedFiles.includes(f));
+      if (availableFiles.length === 0) return;
+
+      const randomIndex = Math.floor(Math.random() * availableFiles.length);
+      const selectedFile = availableFiles[randomIndex];
+      usedFiles.push(selectedFile);
+
+      correctAnswer = answerMap[selectedFile];
+      const img = document.getElementById("quiz-image");
+      img.src = `cobubu/quiz/movie/${selectedFile}`;
+
+      const allAnswers = [...new Set(Object.values(answerMap))];
+      const shuffled = allAnswers.filter(a => a !== correctAnswer).sort(() => 0.5 - Math.random());
+      const options = [...shuffled.slice(0, 2), correctAnswer].sort(() => 0.5 - Math.random());
+
+      const buttonContainer = document.getElementById('button-container');
+      buttonContainer.innerHTML = '';
+      options.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.textContent = answer;
+        btn.onclick = () => {
+          if (hasAnswered) return;
+          hasAnswered = true;
+          const elapsed = (Date.now() - startTime) / 1000;
+          const remaining = Math.max(0, TIME_LIMIT - elapsed);
+          const score = answer === correctAnswer ? Math.floor(remaining * 25) : 0;
+          showPopup(answer === correctAnswer ? "Correct!" : "Wrong!", score, answer !== correctAnswer);
+        };
+        buttonContainer.appendChild(btn);
+      });
+
+      startTime = Date.now();
+      startTimer(TIME_LIMIT);
+    }
+
+    // 초기 시작
+    window.onload = () => {
+  document.getElementById("start-popup").style.display = "block";
+  document.getElementById("start-overlay").style.display = "block";
+};
+
+function saveToGoogleSheet() {
+  const endpoint = 'https://script.google.com/macros/s/AKfycbzSTak8y2wr9wKmSzW_3ZUw8JTiVKqpKXIVgagVzgx-nxXp65IFY2WillykdGuUqklDSA/exec'; 
+
+  fetch(endpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      nickname: nickname,
+      point: totalScore
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(res => res.text())
+  .then(result => {
+    console.log("스프레드시트 저장 결과:", result);
+    location.href = 'Quiz_Rank.html';
+  })
+  .catch(err => {
+    alert("점수 저장 실패: " + err);
+  });
+}
+
+  </script>
+</body>
+</html>
