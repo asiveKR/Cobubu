@@ -103,7 +103,7 @@ td.owner {
 .award-container {
   position: absolute;
   top: 120px;
-  left: 65%;
+  left: 75%;
   margin-left: 0px;
   width: 900px;
   z-index: 700;
@@ -145,7 +145,7 @@ td.owner {
 
 
 .scale-container {
-  transform: scale(0.88);
+  transform: scale(0.73);
   transform-origin: top left; /* 스케일 줄일 때 기준점 */
   width: 133.33%; /* 1 / 0.75 = 133%로 맞춰 공간 보정 */
 }
