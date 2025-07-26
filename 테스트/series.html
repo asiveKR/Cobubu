@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Cobubu museum</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/series.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+
+  <h1>cobubu museum</h1>
+
+  <div class="filter-buttons">
+    <button onclick="showImages('all')">All</button>
+    <button onclick="showImages('movie_')">Movie</button>
+    <button onclick="showImages('fairy_')">Fariy tale</button>
+    <button onclick="showImages('person_')">Person</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="popup" id="popup" onclick="this.style.display='none'">
+    <div class="popup-content" onclick="event.stopPropagation()">
+      <img id="popup-img" src="" alt="">
+      <h3 id="popup-title"></h3>
+      <p id="popup-desc"></p>
+    </div>
+  </div>
+
+  
+
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
+  <script src="sidebar.js"></script>
+  <script>
+    const gallery = document.getElementById("gallery");
+    const popup = document.getElementById("popup");
+    const popupImg = document.getElementById("popup-img");
+    const popupTitle = document.getElementById("popup-title");
+    const popupDesc = document.getElementById("popup-desc");
+
+    /* 버튼 선택된 모드 */ 
+    const filterButtons = document.querySelectorAll('.filter-buttons button');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+    // "All" 버튼은 제외하고 selected 클래스 제거
+        filterButtons.forEach(b => {
+          if (b.textContent !== 'All') {
+            b.classList.remove('selected');
+          }
+        });
+
+    // 현재 클릭된 버튼이 "All"가 아니면 selected 클래스 추가
+        if (btn.textContent !== 'All') {
+          btn.classList.add('selected');
+        }
+      });
+    });
+
+    let descriptionData = {};
+    let imageList = [
+      "movie_John.png",
+      "fairy_RedHair.png",
+      "fairy_YoungPrince.png",
+      "person_MeCoIce.png"
+
+    ];
+
+    function showImages(prefix) {
+      gallery.innerHTML = '';
+
+      const filtered = prefix === 'all' ? imageList : imageList.filter(name => name.startsWith(prefix));
+
+      filtered.forEach(filename => {
+        const img = document.createElement("img");
+        img.src = "cobubu/" + filename;
+        img.alt = filename;
+        img.onclick = () => {
+          popupImg.src = img.src;
+          const key = filename.trim();
+          const info = descriptionData[key] || { title: key, desc: "설명이 없습니다." };
+          popupTitle.textContent = info.title;
+          popupDesc.textContent = info.desc;
+          popup.style.display = "flex";
+        };
+        gallery.appendChild(img);
+      });
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const btn = document.getElementById("sidebar-toggle");
+      sidebar.classList.toggle("open");
+      btn.innerHTML = sidebar.classList.contains("open") ? "❯" : "❮";
+    }
+
+    fetch("script.txt")
+    .then(res => res.text())
+    .then(text => {
+      const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).map(l => l.trim()).filter(l => l !== "");
+      for (let i = 0; i < lines.length; i += 3) {
+        const filename = lines[i];
+        const title = lines[i + 1] || "";
+        const desc = lines[i + 2] || "";
+        descriptionData[filename] = { title, desc };
+      }
+
+      showImages("all");
+    })
+    .catch(err => {
+      console.error("설명 파일 불러오기 실패:", err);
+      showImages("all");
+    });
+  </script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='index.html'">🏠 Main</button>
+      <button onclick="location.href='rank.html'">🥇 Rank</button>
+      <button onclick="location.href='series.html'">🖼 Series</button>
+      <button onclick="location.href='game.html'">🎮 Game</button>
+    </div>
+  </div>
+
+</body>
+</html>

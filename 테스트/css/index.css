@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  padding: 50px;
+  
+  background-color: #f9f5f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-box {
+  display: flex;
+  width: 1200px;
+  height: 900px;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  margin-bottom: 30px;
+}
+
+.left-column {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.right-column {
+  width: 60%;
+  padding: 30px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #ffffffd0;
+  border-left: 5px solid #ccc; /* 좌측 테두리 추가 */
+}
+
+.image-box {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  
+  height: auto; /* 이미지 크기에 맞게 조절 */
+}
+.image-box img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.contact-box {
+  flex: 1;
+  border-top: 5px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+}
+
+.contact-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 좌측 정렬 */
+  font-size: 14px;
+  color: #333;
+  padding: 10px;
+}
+
+.button-row {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button-row button {
+  padding: 10px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  border: 2px solid #333;
+  transition: background-color 0.2s, color 0.2s;
+  font-family: "Bitcount Single", system-ui;
+}
+
+.button-row button:hover {
+  background-color: #333;
+  color: white;
+}
+
+.button-row .dummy {
+  border-color: #999;
+  color: #999;
+  cursor: default;
+}
+
+.button-row .dummy:hover {
+  background: none;
+  color: #999;
+}

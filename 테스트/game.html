@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Game Hall</title>
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Bitcount Single', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 50px;
+    }
+
+    .game-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .game-card {
+      width: 400px;
+      background-color: white;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .game-image {
+      position: relative;
+    }
+
+    .game-image img {
+      width: 100%;
+      height: auto;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .game-title {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      width: 100%;
+      color: white;
+      font-size: 32px;
+      font-weight: bold;
+      background-color: rgba(0,0,0,0.2);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .game-desc {
+      padding: 20px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+  <h1>Game Hall</h1>
+
+  <div class="game-grid">
+    <!-- 퀴즈 게임 -->
+    <a href="quiz_page.html">
+      <div class="game-card">
+        <div class="game-image">
+          <img src="game/quiz.png" alt="Quiz Game">
+          <div class="game-title">🎯 Quiz</div>
+        </div>
+        <div class="game-desc">
+          Look at the image in time and guess the title! 
+          이것만 해라 다른건 아직 없음
+        </div>
+      </div>
+    </a>
+
+    <!-- 이상형 월드컵 -->
+    <a href="worldcup.html">
+      <div class="game-card">
+        <div class="game-image">
+          <img src="game/worldcup.png" alt="World Cup">
+          <div class="game-title">🏆 World Cup</div>
+        </div>
+        <div class="game-desc">
+          Pick your favorite Cobubu! Cobubu worldcup
+        </div>
+      </div>
+    </a>
+
+    <!-- 성장형 게임 -->
+    <a href="grow.html">
+      <div class="game-card">
+        <div class="game-image">
+          <img src="game/grow.png" alt="Grow Game">
+          <div class="game-title">🌱 Grow</div>
+        </div>
+        <div class="game-desc">
+          Raise your Cobubu! Create the Strongest Cobubu.
+        </div>
+      </div>
+    </a>
+
+    <!-- 탕수육 게임 -->
+    <a href="tang.html">
+      <div class="game-card">
+        <div class="game-image">
+          <img src="game/tang.png" alt="Tang Game">
+          <div class="game-title">🍤 Tang Game</div>
+        </div>
+        <div class="game-desc">
+          Survive with your Cobubu! And Test your limits!
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
+  <script src="sidebar.js"></script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='index.html'">🏠 Main</button>
+      <button onclick="location.href='rank.html'">🥇 Rank</button>
+      <button onclick="location.href='series.html'">🖼 Series</button>
+      <button onclick="location.href='game.html'">🎮 Game</button>
+    </div>
+  </div>
+</body>
+</html>

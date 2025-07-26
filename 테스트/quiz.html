@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>COBUBU Quiz</title>
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>COBUBU quiz</h1>
+    <div class="button-group">
+      <button onclick="location.href='quiz_page.html'"> > Start < </button>
+    </div>
+  </div>
+
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
+  <script src="sidebar.js"></script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='index.html'">🏠 Main</button>
+      <button onclick="location.href='rank.html'">🥇 Rank</button>
+      <button onclick="location.href='series.html'">🖼 Series</button>
+      <button onclick="location.href='game.html'">🎮 Game</button>
+    </div>
+  </div>
+</body>
+</html>
