@@ -72,7 +72,7 @@ td.owner {
   position: absolute;
   top: 100px;
   left: 960px;
-  width: 280px;
+  width: 550px;
   background-color: #ffffff;
   border: 2px solid #333;
   padding: 20px;
@@ -84,7 +84,7 @@ td.owner {
 }
 
 .info-popup h2 {
-  font-size: 20px;
+  font-size: 24px;
   margin-bottom: 12px;
 }
 
@@ -103,7 +103,7 @@ td.owner {
 .award-container {
   position: absolute;
   top: 120px;
-  left: 78%;
+  left: 65%;
   margin-left: 0px;
   width: 900px;
   z-index: 700;
@@ -141,4 +141,11 @@ td.owner {
   font-weight: bold;
   z-index: 900;
   text-align: center;
+}
+
+
+.scale-container {
+  transform: scale(0.88);
+  transform-origin: top left; /* 스케일 줄일 때 기준점 */
+  width: 133.33%; /* 1 / 0.75 = 133%로 맞춰 공간 보정 */
 }
