@@ -9,30 +9,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="scale-container">
 
-  <div class="main-layout">
-    <div class="award-container">
-     <div class="award-title">Top NFT Holders Ranking</div>
+    <div class="main-layout">
+      <div class="award-container">
+       <div class="award-title">Top NFT Holders Ranking</div>
 
-     <img src="rankG.gif" alt="rank image" class="award-img">
-     <div class="award-label" id="rank-1"></div>
-     <div class="award-label" id="rank-2"></div>
-     <div class="award-label" id="rank-3"></div>
+       <img src="rankG.gif" alt="rank image" class="award-img">
+       <div class="award-label" id="rank-1"></div>
+       <div class="award-label" id="rank-2"></div>
+       <div class="award-label" id="rank-3"></div>
+     </div>
    </div>
- </div>
 
 
- <!-- 고정 팝업 내용 -->
- <div class="info-popup" id="floating-popup">
-  <h2>📊 Table Description </h2>
-  <p>
-    ◀The left table shows the owners listed by <b>NFT number</b>.<br><br>
-    ▶The right image highlights the Top 3 holders who own <b>2 or more NFTs</b>. 🏆👑<br><br>
-    The date indicates when the NFT ownership was transferred. 📅<br><br>
-    📌 <b>Update Frequency:</b> Automatically refreshed every hour <br><br>
-    👤 <b>Owner:</b> Counted based on wallet handles 🧾<br><br>
-  </p>
-</div>
+   <!-- 고정 팝업 내용 -->
+   <div class="info-popup" id="floating-popup">
+    <h2>📊 Table Description </h2>
+    <p>
+      ◀The left table shows the owners listed by <b>NFT number</b>.<br><br>
+      ▶The right image highlights the Top 3 holders who own <b>2 or more NFTs</b>. 🏆👑<br><br>
+      The date indicates when the NFT ownership was transferred. 📅<br><br>
+      📌 <b>Update Frequency:</b> Automatically refreshed every hour <br><br>
+      👤 <b>Owner:</b> Counted based on wallet handles 🧾<br><br>
+    </p>
+  </div>
 
 <!-- 테이블 -->
 <h1>NFT Holder table</h1>
@@ -50,9 +51,16 @@
 
 
 
-<script src="sidebar.js"></script>
+
 <script src="rank.js"></script>
 
+
+
+
+
+</div>
+<script src="sidebar.js"></script>
+<button id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
 <div id="sidebar" class="sidebar">
   <div class="sidebar-content">
     <button onclick="location.href='index.html'">🏠 Main</button>
@@ -61,8 +69,5 @@
     <button onclick="location.href='game.html'">🎮 Game</button>
   </div>
 </div>
-
-<button id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
-
 </body>
 </html>
