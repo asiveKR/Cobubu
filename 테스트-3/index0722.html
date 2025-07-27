@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>cobubu series</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      font-family: Arial, sans-serif;
+    }
+
+    /* 왼쪽 메뉴 */
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-right: 1px solid #ccc;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .sidebar button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 3px 0 #001f3f;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar button:hover {
+      background-color: #004080;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #001f3f;
+    }
+
+    .sidebar button:active {
+      background-color: #002244;
+      transform: translateY(1px);
+      box-shadow: 0 2px 0 #001f3f;
+    }
+
+    .sidebar .small-btn {
+      font-size: 13px;
+      padding: 6px;
+      margin-top: 20px;
+      background-color: #444;
+      box-shadow: 0 2px 0 #222;
+    }
+
+    /* 메인 콘텐츠 */
+    .main {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 200px);
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .gallery img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .main img#main-gif {
+      max-width: 400px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 사이드 메뉴 -->
+  <div class="sidebar">
+    <h2>메뉴</h2>
+    <button onclick="showFolder('1')">버튼 1</button>
+    <button onclick="showFolder('2')">버튼 2</button>
+    <button class="small-btn" onclick="showGif()">GIF로 돌아가기</button>
+  </div>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="main" id="main-content">
+    <!-- 초기에는 gif만 보이게 -->
+    <img src="1.gif" alt="GIF" id="main-gif">
+  </div>
+
+  <script>
+    // 이미지 파일 이름 목록 (이건 폴더별로 수동 관리 필요함)
+    const imageLists = {
+      "1": ["a.png", "b.png", "c.png", "d.png"],
+      "2": ["01.jpg", "02.jpg", "03.jpg", "04.jpg"]
+    };
+
+    // 폴더 선택 시 이미지 출력
+    function showFolder(folderName) {
+      const container = document.getElementById("main-content");
+      container.innerHTML = `<h1>${folderName}번 이미지</h1>`;
+
+      const gallery = document.createElement("div");
+      gallery.className = "gallery";
+
+      const list = imageLists[folderName].slice().sort(); // 이름순 정렬
+      list.forEach(filename => {
+        const img = document.createElement("img");
+        img.src = `${folderName}/${filename}`;
+        img.alt = filename;
+        gallery.appendChild(img);
+      });
+
+      container.appendChild(gallery);
+    }
+
+    // gif 화면으로 복귀
+    function showGif() {
+      const container = document.getElementById("main-content");
+      container.innerHTML = `<img src="1.gif" alt="GIF" id="main-gif">`;
+    }
+  </script>
+
+</body>
+</html> 

@@ -1,0 +1,148 @@
+body {
+      font-family: "Bitcount Single", system-ui;
+      background: #f5f5f5;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      margin-left: 120px;
+    }
+
+    table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: 800px;
+      margin-left: 70px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    th, td { /* 테이블 헤더 및 테이블 셀 스타일 */
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-family: inherit; /* 폰트 상속 */ 
+    }
+
+    th {
+      background-color: #333;
+      color: white;
+    }
+
+    /* 첫 번째 열: Rank */
+    th:nth-child(1), td:nth-child(1) {
+      width: 80px;
+    }
+
+/* 두 번째 열: Owner */
+th:nth-child(2), td:nth-child(2) {
+  width: 420px;
+}
+
+/* 세 번째 열: Date */
+th:nth-child(3), td:nth-child(3) {
+  width: 90px;
+}
+
+/* 네 번째 열: Note */
+th:nth-child(4), td:nth-child(4) {
+  width: 80px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+td.owner {
+  font-family: "Bitcount Single", system-ui, monospace;
+  text-align: left;
+  white-space: pre;
+}
+
+
+
+/* 팝업 스타일 지정 */
+.info-popup {
+  position: fixed;
+  top: 100px;
+  left: 580px;
+  width: 180px;
+  background-color: #ffffff;
+  border: 2px solid #333;
+  padding: 10px;
+  font-family: "Bitcount Single", sans-serif;
+  color: #111;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: top 0.3s ease-out; 
+}
+
+.info-popup h2 {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.info-popup p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.main-layout {
+  position: relative;
+  width: 1000px;
+  margin: 0 auto;
+}
+
+/* 시상식 순위 스타일 */
+.award-container {
+  position: absolute;
+  top: 120px;
+  left: 78%;
+  margin-left: 0px;
+  width: 900px;
+  z-index: 700;
+}
+
+.award-img {
+  width: 100%;
+  display: block;
+}
+
+.award-label {
+  position: absolute;
+  font-family: "Bitcount Single", system-ui;
+  font-size: 19px;
+  color: #000;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+#rank-1 { top: -22px; left: 260px; }
+#rank-2 { top: 130px; left: -20px; }
+#rank-3 { top: 195px; right: 50px; }
+
+
+.award-title {
+  position: absolute;
+  top: -70px;  /* 이미지 위에 고정 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Bitcount Single", system-ui;
+  font-size: 28px;
+  background-color: rgba(0,0,0,0.1);
+  color: black;
+  font-weight: bold;
+  z-index: 900;
+  text-align: center;
+}
+
+
+.scale-container {
+  transform: scale(0.63);
+  transform-origin: top left; /* 스케일 줄일 때 기준점 */
+  width: 133.33%; /* 1 / 0.75 = 133%로 맞춰 공간 보정 */
+}
