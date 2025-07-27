@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Quiz Rank</title>
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin-left: 180px;
+      font-family: 'Bitcount Single', system-ui;
+      background-color: #f5f5f5;
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 50px;
+    }
+
+    .ranking-wrapper {
+      transform: scale(1.3); /* 표 크기 */
+      transform-origin: top left;
+    }
+
+    .ranking-table {
+      display: inline-block;
+      margin: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 10px;
+      min-width: 400px;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 20px;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #333;
+      color: white;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    /* 깜빡이는 효과 */
+    .blink-red    { animation: blinkRed 0.7s infinite; }
+    .blink-orange { animation: blinkOrange 0.7s infinite; }
+    .blink-yellow { animation: blinkYellow 0.7s infinite; }
+
+    @keyframes blinkRed { /* 1st */
+      0%, 100% { background-color: #fff; }
+      50% { background-color: #f0d798; }
+    }
+
+    @keyframes blinkOrange { /* 2st */ 
+      0%, 100% { background-color: #fff; }
+      50% { background-color: #d6d6d6; }
+    }
+
+    @keyframes blinkYellow { /* 3st */
+      0%, 100% { background-color: #fff; }
+      50% { background-color: #e6bf98; }
+    }
+
+    /* 버튼 설명 */
+    .refresh-instruction {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: black;
+      font-family: 'Bitcount Single';
+      background: none;
+    }
+
+    /* 버튼 위치 */
+    .refresh-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 130px;
+    }
+
+    /* 버튼 스타일 */
+    .refresh-btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      font-family: 'Bitcount Single';
+      cursor: pointer;
+      background-color: #ffff66;
+      border: 3px solid black;
+      border-radius: 8px;
+      box-shadow: 3px 3px 0 #888;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 5px 5px 0 #444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 왼쪽 : 순위표 -->
+  <div class="ranking-wrapper">
+    <div id="rankings"></div>
+  </div>
+
+  <!-- 오른쪽 : 버튼 영역 -->
+  <div class="refresh-section">
+    <p class="refresh-instruction">
+      If you don't see your nickname, <br>
+      please click the button below (↓)
+    </p>
+    <button onclick="location.reload()" class="refresh-btn">🔁 Refresh</button>
+  </div>
+
+  <script>
+    const SHEETS = [
+      {
+        name: "What's your Quiz rank?",
+        sheetId: "1BnPMImN_mf_0ZYiVMx-ZZEfNeh16PJLuwZaaRnRlDGI"
+      }
+    ];
+
+    const container = document.getElementById("rankings");
+
+    SHEETS.forEach(sheet => {
+      const url = `https://opensheet.elk.sh/${sheet.sheetId}/1?ts=${Date.now()}`;
+
+
+      fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const rows = data.filter(row => row.Nickname && row.Point);
+        rows.sort((a, b) => Number(b.Point) - Number(a.Point));
+
+        const table = document.createElement("table");
+        const title = document.createElement("h2");
+        title.textContent = sheet.name;
+
+        const thead = table.createTHead();
+        const headerRow = thead.insertRow();
+        ["Rank", "Nickname", "Point"].forEach(text => {
+          const th = document.createElement("th");
+          th.textContent = text;
+          headerRow.appendChild(th);
+        });
+
+        const tbody = table.createTBody();
+        rows.forEach((row, index) => {
+          const tr = tbody.insertRow();
+          const rankCell = tr.insertCell();
+          rankCell.textContent = `#${index + 1}`;
+          tr.insertCell().textContent = row.Nickname;
+          tr.insertCell().textContent = row.Point;
+
+          // 깜빡임 클래스 부여
+          if (index === 0) tr.classList.add("blink-red");
+          else if (index === 1) tr.classList.add("blink-orange");
+          else if (index === 2) tr.classList.add("blink-yellow");
+        });
+
+        const div = document.createElement("div");
+        div.className = "ranking-table";
+        div.appendChild(title);
+        div.appendChild(table);
+        container.appendChild(div);
+      });
+    });
+  </script>
+
+<!-- 사이드바 추가 -->
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❯</button>
+  <script src="js/sidebar.js"></script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='index.html'">🏠 Main</button>
+      <button onclick="location.href='series.html'">✅ Series</button>
+      <button onclick="location.href='museum.html'">🖼 Museum</button>
+      <button onclick="location.href='game.html'">🎮 Game</button>
+    </div>
+  </div>
+
+</body>
+</html>

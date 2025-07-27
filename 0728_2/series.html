@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>NFT Holder table</title>
+  <link rel="stylesheet" href="css/series.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <!-- ✅ Bitcount Single 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 고정 팝업 내용 -->
+  <div class="info-popup" id="floating-popup">
+    <h2>📊 Table Description </h2>
+    <p>
+      ◀The left table displays a list of holders organized by <b>SERIES</b>.<br><br>
+      ▶  The right image highlights the top <br><b>3 holders of SERIES</b>. 🏆👑<br><br>
+      📅 The date indicates the time when the SERIES was first revealed.<br><br>
+      📌 Each SERIES is expected to evolve into NFT form in the future,
+      with ownership determined by comments made within the MemeX app.<br><br>
+      🍀 Holders of a <b>SERIES</b> may receive mysterious benefits.<br><br>
+    </p>
+  </div>
+
+  <div class="main-layout">
+    <div class="award-container">
+     <div class="award-title">Top NFT Holders Ranking</div>
+
+     <img src="cobubu/rank/rankG.gif" alt="rank image" class="award-img">
+     <div class="award-label" id="rank-1"></div>
+     <div class="award-label" id="rank-2"></div>
+     <div class="award-label" id="rank-3"></div>
+   </div>
+ </div>
+
+ <div class="scale-container">
+
+<!-- 테이블 -->
+<h1>S E R I E S</h1>
+<table id="rank-table">
+  <thead>
+    <tr id="table-head">
+      <th>Number</th>
+      <th>Owner</th>
+      <th>Date (KST)</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody id="table-body"></tbody>
+</table>
+
+<script src="js/rank.js"></script>
+</div> <!-- 사이즈 조정 -->
+
+
+<!-- 사이드바 추가 -->
+<button id="sidebar-toggle" onclick="toggleSidebar()">❯</button>
+<script src="js/sidebar.js"></script>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-content">
+    <button onclick="location.href='index.html'">🏠 Main</button>
+    <button onclick="location.href='series.html'">✅ Series</button>
+    <button onclick="location.href='museum.html'">🖼 Museum</button>
+    <button onclick="location.href='game.html'">🎮 Game</button>
+  </div>
+</div>
+
+</body>
+</html>
