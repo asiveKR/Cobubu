@@ -32,7 +32,7 @@
     const tableBody = document.getElementById('table-body');
     let rankIndex = 0;
 
-    for (let i = 13; i < cleanRows.length; i++) {
+    for (let i = 11; i < cleanRows.length; i++) {
       const row = cleanRows[i].slice(1, 5);
       if (!row || row.every(cell => !cell)) continue;
 
@@ -40,11 +40,7 @@
       row.forEach((cell, idx) => {
         const td = document.createElement('td');
 
-        if (idx === 0) {
-          if (rankIndex === 0) td.classList.add('rank-gold');
-          else if (rankIndex === 1) td.classList.add('rank-silver');
-          else if (rankIndex === 2) td.classList.add('rank-bronze');
-        }
+
 
         if (idx === 1) {
           td.classList.add('owner');
@@ -64,7 +60,7 @@
     const ownerOrder = [];
 
 // 셀 탐색 + 등장 횟수 집계
-    for (let i = 13; i < cleanRows.length; i++) {
+    for (let i = 11; i < cleanRows.length; i++) {
       const ownerRaw = cleanRows[i][2];
       if (!ownerRaw) continue;
 
