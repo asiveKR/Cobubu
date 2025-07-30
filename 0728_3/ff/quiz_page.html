@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Title Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/bgm.css?v=20250728_2">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Bitcount Single', system-ui;
+      background-color: #f8f8f8;
+    }
+    .quiz-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .quiz-container img {
+      width: 700px;
+      height: 450px;
+      object-fit: contain;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      background-color: white;
+    }
+    .answer-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+
+    }
+    .answer-buttons button {
+      font-size: 24px;
+      padding: 15px 30px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-family: 'Bitcount Single', system-ui;
+    }
+    .answer-buttons button:hover {
+      background-color: #666;
+    }
+    #progress-bar {
+      width: 1500px;
+      height: 15px;
+      background-color: #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    #progress {
+      height: 100%;
+      background-color: #ff4444;
+      width: 100%;
+      transition: width 0.1s linear;
+    }
+    .popup, .gameover, .saving-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bitcount Single', system-ui;
+      background: white;
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 60px;
+      text-align: center;
+      z-index: 10;
+      width: 700px;
+      max-width: 90%;
+    }
+    .popup h2, .gameover h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .popup button, .gameover button, .saving-popup button {
+      font-size: 35px;
+      padding: 10px 20px;
+      background-color: #222;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-family: 'Bitcount Single', system-ui;
+    }
+    .popup button:hover, .gameover button:hover, .saving-popup button:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 5;
+    }
+    .score {
+      position: absolute;
+      font-size: 18px;
+    }
+    #nickname-input {
+      font-size: 24px;
+      padding: 12px 16px;
+      width: 70%;
+      max-width: 400px;
+      font-family: 'Bitcount Single';
+      border: 2px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="start-overlay"></div>
+  <div class="popup" id="start-popup">
+    <h2>Enter Nickname</h2>
+    <p style="font-size:34px; margin-bottom: 10px; color: #222;">
+      Please enter a nickname to play. <br><br>
+      You might get lucky if you use your Twitter or MemeX handle! (e.g. @asiveKR) ✨
+    </p>
+    <input type="text" id="nickname-input" placeholder="Enter your nickname">
+    <br><br>
+    <button onclick="startGame()">Start</button>
+  </div>
+
+  <div class="quiz-container" style="display: none;">
+    <div class="score" id="info-display" style="top: 2vw; left: 2vw;
+    font-size: 3vw"></div>
+    <h1>Title Quiz</h1>
+    <div class="score" id="score-display" style="top: 5vw; left: 2vw; display: none; font-size: 3vw;">
+  Point: 0
+</div>
+    <img id="quiz-image" src="" alt="Movie Quiz">
+    <div class="answer-buttons" id="button-container"></div>
+    <div id="progress-bar">
+      <div id="progress"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <div class="popup" id="popup">
+    <h2 id="popup-message"></h2>
+    <p id="popup-score"></p>
+    <p id="popup-answer"></p>
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <div class="gameover" id="gameover">
+    <h2>🎉 Game Over 🎉</h2>
+    <p id="final-score"></p>
+    <button onclick="saveToGoogleSheet()" id="save-button">Save and check Rank</button>
+  </div>
+
+  <div class="saving-popup" id="saving-popup">
+    <h2>Saving your score...</h2>
+    <p>Please wait while your score is being saved.<br>This popup will close automatically after saving.</p>
+    <!-- <button onclick="closeSavingPopup()">Close</button> 닫기 버튼-->
+  </div>
+
+  <script>
+    let nickname = "";
+    let answerMap = {};
+    let correctAnswer = "";
+    let timer = null;
+    let startTime = null;
+    let totalScore = 0;
+    let hasAnswered = false;
+    let questionCount = 0;
+    const MAX_QUESTIONS = 15;
+    const TIME_LIMIT = 3.5;
+    let usedFiles = [];
+    let isSaving = false;
+
+    async function loadAnswerMap() {
+      const timestamp = new Date().getTime();  // 현재 시간 (강제 캐시 무효화용)
+      const response = await fetch(`cobubu/quiz/answer.txt?v=${timestamp}`, {
+    cache: "no-store"  // ✅ 캐시 완전 무시
+  });
+      const text = await response.text();
+      const lines = text.trim().split('\n');
+      for (let i = 0; i < lines.length; i += 2) {
+        const filename = lines[i].trim();
+        const answer = lines[i + 1].trim();
+        answerMap[filename] = answer;
+
+      }
+    }
+
+    function startGame() {
+      const input = document.getElementById("nickname-input").value.trim();
+      if (input === "") {
+        alert("Enter your nickname.");
+        return;
+      }
+      nickname = input;
+      document.getElementById("start-popup").style.display = "none";
+      document.getElementById("start-overlay").style.display = "none";
+      document.getElementById("score-display").style.display = "block";
+      const container = document.querySelector(".quiz-container");
+      container.style.display = "flex";
+      loadAnswerMap().then(loadQuiz);
+    }
+
+    function startTimer(duration) {
+      const progress = document.getElementById("progress");
+      let start = Date.now();
+      timer = setInterval(() => {
+        if (hasAnswered) return;
+        const elapsed = (Date.now() - start) / 1000;
+        const remaining = Math.max(0, duration - elapsed);
+        const percent = (remaining / duration) * 100;
+        progress.style.width = percent + "%";
+        if (remaining <= 0) {
+          clearInterval(timer);
+          hasAnswered = true;
+          setTimeout(() => {
+            showPopup("Time Over!", 0, true);
+          }, 230);
+        }
+      }, 50);
+    }
+
+    function showPopup(message, score, showAnswer = false) {
+      clearInterval(timer);
+      if (questionCount + 1 >= MAX_QUESTIONS) {
+        document.getElementById("gameover").style.display = "block";
+        document.getElementById("final-score").textContent = `Your Point: ${totalScore + score}`;
+        if (message === "Correct!") totalScore += score;
+        return;
+      }
+      document.getElementById("popup-message").textContent = message;
+      document.getElementById("popup-score").textContent = `Get point: ${score}`;
+      document.getElementById("popup-answer").textContent = showAnswer ? `Answer: ${correctAnswer}` : '';
+      document.getElementById("popup").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+      if (message === "Correct!") {
+        totalScore += score;
+        document.getElementById("score-display").textContent = `Point : ${totalScore}`;
+      }
+    }
+
+    function nextQuestion() {
+      questionCount++;
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+      loadQuiz();
+    }
+
+    function loadQuiz() {
+      document.getElementById("info-display").textContent = `${nickname} (${questionCount + 1}/${MAX_QUESTIONS})`;
+      clearInterval(timer);
+      hasAnswered = false;
+      document.getElementById("progress").style.width = "100%";
+      const availableFiles = Object.keys(answerMap).filter(f => !usedFiles.includes(f));
+      if (availableFiles.length === 0) return;
+      const randomIndex = Math.floor(Math.random() * availableFiles.length);
+      const selectedFile = availableFiles[randomIndex];
+      usedFiles.push(selectedFile);
+      correctAnswer = answerMap[selectedFile];
+      const timestamp = new Date().getTime();  // 현재 시간 (강제 캐시 무효화용)
+      document.getElementById("quiz-image").src = `cobubu/quiz/${selectedFile}?v=${timestamp}`;
+
+      const allAnswers = [...new Set(Object.values(answerMap))];
+      const shuffled = allAnswers.filter(a => a !== correctAnswer).sort(() => 0.5 - Math.random());
+      const options = [...shuffled.slice(0, 2), correctAnswer].sort(() => 0.5 - Math.random());
+      const buttonContainer = document.getElementById('button-container');
+      buttonContainer.innerHTML = '';
+      options.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.textContent = answer;
+        btn.onclick = () => {
+          if (hasAnswered) return;
+          hasAnswered = true;
+          const elapsed = (Date.now() - startTime) / 1000;
+          const remaining = Math.max(0, TIME_LIMIT - elapsed);
+          const score = answer === correctAnswer ? Math.floor(remaining * 25) : 0;
+          showPopup(answer === correctAnswer ? "Correct!" : "Wrong!", score, answer !== correctAnswer);
+        };
+        buttonContainer.appendChild(btn);
+      });
+      startTime = Date.now();
+      startTimer(TIME_LIMIT);
+    }
+
+    function closeSavingPopup() {
+      document.getElementById("saving-popup").style.display = "none";
+    }
+
+    function saveToGoogleSheet() {
+      if (isSaving) return;
+      isSaving = true;
+      document.getElementById("saving-popup").style.display = "block";
+      const endpoint = 'https://royal-paper-b7e4.asivekr.workers.dev/';
+      fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({ nickname: nickname, point: totalScore }),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.text())
+      .then(result => {
+        console.log("스프레드시트 저장 결과:", result);
+        location.href = 'quiz_rank.html';
+      })
+      .catch(err => {
+        alert("점수 저장 실패: " + err);
+        isSaving = false;
+        closeSavingPopup();
+      });
+    }
+
+    window.onload = () => {
+      document.getElementById("start-popup").style.display = "block";
+      document.getElementById("start-overlay").style.display = "block";
+      document.getElementById("nickname-input").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") startGame();
+      });
+    };
+
+
+
+  </script>
+
+  <!-- 사이드바 추가 -->
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❯</button>
+  <script src="js/sidebar.js"></script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='index.html'">🏠 Main</button>
+      <button onclick="location.href='series.html'">✅ Series</button>
+      <button onclick="location.href='museum.html'">🖼 Museum</button>
+      <button onclick="location.href='game.html'">🎮 Game</button>
+    </div>
+  </div>
+
+<!-- BGM 관련 요소들 -->
+<div id="bgm-container">
+  <button id="start-button">
+  <img id="bgm-icon" src="img/BGM_ON.png" alt="BGM Icon">
+</button>
+  <div class="bgm-label">BGM ON</div>
+  <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
+  <audio id="bgm-audio" src="effect/bgm.mp3" autoplay loop></audio>
+</div>
+<img id="bgm-icon" src="img/BGM_ON.png" style="display:none;" />
+<script src="js/bgm.js" defer></script>
+
+
+
+</body>
+</html>
