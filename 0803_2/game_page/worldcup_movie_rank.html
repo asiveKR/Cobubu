@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Worldcup Ranking</title>
   <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/worldcup_rank.css">
-  <link rel="stylesheet" href="/css/sidebar.css">
-  <link rel="stylesheet" href="/css/bgm.css?v=20250728_2">
+  <link rel="stylesheet" href="/0803_2/css/worldcup_rank.css">
+  <link rel="stylesheet" href="/0803_2/css/sidebar.css">
+  <link rel="stylesheet" href="/0803_2/css/bgm.css?v=20250728_2">
   
 </head>
 <body>
@@ -27,7 +27,7 @@
 
   <script>
     const spreadsheetId = '1-dtzEV9aVvnavlYJ2xFTvIiGBlsrsEW_LJmyNWsxhC4'; // movie 스프레드시트 ID
-    const scriptUrl = '/script.txt';
+    const scriptUrl = '/0803_2/script.txt';
 
     async function fetchRankingData() {
       try {
@@ -155,13 +155,14 @@
 <!-- BGM 관련 요소들 -->
 <div id="bgm-container">
   <button id="start-button">
-    <img id="bgm-icon" src="/img/BGM_ON.png" alt="BGM Icon">
+    <img id="bgm-icon" src="/0803_2/img/BGM_ON.png" alt="BGM Icon">
   </button>
   <div class="bgm-label">BGM ON</div>
   <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
-  <audio id="bgm-audio" src="/effect/bgm.mp3" autoplay loop></audio>
+  <audio id="bgm-audio" src="/0803_2/effect/bgm.mp3" autoplay loop></audio>
 </div>
-<img id="bgm-icon" src="/img/BGM_ON.png" style="display:none;" />
-<script src="/js/bgm.js" defer></script>
+<img id="bgm-icon" src="/0803_2/img/BGM_ON.png" style="display:none;" />
+<script src="/0803_2/js/bgm.js" defer></script>
 </body>
+
 </html>
