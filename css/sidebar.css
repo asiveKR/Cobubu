@@ -1,0 +1,87 @@
+/* 버튼 기본 위치는 왼쪽 */
+#sidebar-toggle {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 10001;
+  width: clamp(30px, 3vw, 50px);  /* 반응형 너비 */
+  height: clamp(60px, 8vh, 120px); /* 반응형 높이 */
+  background-color: rgba(202,184,134, 0.6);
+  color: white;
+  font-size: clamp(16px, 1.5vw, 24px); /* 텍스트 크기도 비율 기반 */
+  border: none;
+  border-radius: 0 0.5vw 0.5vw 0;
+  cursor: pointer;
+  transition: left 0.3s ease;
+}
+
+/* 사이드바가 열렸을 때 버튼도 이동 */
+body.sidebar-open #sidebar-toggle {
+  left: clamp(160px, 20vw, 280px);
+}
+
+/* 사이드바 */
+.sidebar {
+  font-family: "Bitcount Single", system-ui, sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: clamp(160px, 20vw, 280px);  /* 화면 비율로 너비 설정 */
+  background-color: rgba(202,184,134, 0.7);
+  color: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 10000;
+  padding-top: clamp(50px, 10vh, 100px); /* 상단 여백도 비율로 */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* 내부 버튼 영역 */
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: clamp(10px, 2vw, 30px);
+  gap: clamp(6px, 1.5vh, 16px);
+}
+
+/* 사이드바 스크롤바 스타일 (Firefox + Chrome) */
+.sidebar, .sidebar-content {
+  scrollbar-width: thin;
+  scrollbar-color: #888 rgba(202,184,134,0.4);
+}
+
+.sidebar::-webkit-scrollbar,
+.sidebar-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+
+/* 사이드바 버튼 */
+.sidebar-content button {
+  font-family: "Bitcount Single", system-ui, sans-serif;
+  background: none;
+  border: none;
+  color: black;
+  font-size: clamp(18px, 2.8vw, 32px);  /* 반응형 텍스트 */
+  cursor: pointer;
+  padding: clamp(6px, 1vh, 12px) 0;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-content button:hover {
+  background-color: #cab886;
+}
