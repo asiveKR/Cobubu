@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cobubu Worldcup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/bgm.css?v=20250728_2">
+  <link rel="stylesheet" href="/css/worldcup.css">
+
+</head>
+<body>
+
+  <div id="genre-popup">
+    <h1>Worldcup Genre Choice</h1>
+
+    <!-- button -->
+    <div class="popup-buttons">
+      <button class="popup-button" id="movieBtn" onclick="loadImages('movie')">
+        <img src="/game_asset/worldcup/movie.png" alt="Movie" class="button-bg" />
+        <span class="button-label">Movie</span>
+      </button>
+      <button class="popup-button" id="jjalBtn" onclick="loadImages('jjal')">
+        <img src="/game_asset/worldcup/jjal.png" alt="Jjal" class="button-bg" />
+        <span class="button-label">Jjal</span>
+      </button>
+    </div>
+
+    <div class="popup-description">
+      <b>Cobubu worldcup</b> 🏆 is where you choose your favorite <b>cobubu image</b>. 🎨<br>
+      From two images displayed on the screen, pick the one you prefer. 👉🖼️🖼️<br>
+      The selected image will advance in a <b>tournament-style bracket</b> until the final match. 🥊<br>
+      Where you’ll discover the <b>ultimate favorite</b> and see the <b>ranking</b> of cobubu images. 🥇📊<br><br><br>
+      <b>*짤 (jjal)</b> 🖼️ is a Korean slang term for a <b>meme</b> or a <b>reaction image</b>,  
+      often shared for <b>humor</b> 😂 or <b>emotional expression</b> 😭.
+
+    </div>
+  </div>
+
+  <h1 id="round-title" style="display: none;">Cobubu Worldcup</h1>
+
+  <div id="image-container" class="image-container">
+    <div class="image-box">
+      <div class="image-wrapper">
+        <img id="img1" class="choice-image" />
+      </div>
+      <div id="desc1" class="desc-box">
+        <div id="img1-title" class="image-title"></div>
+        <div id="img1-desc"></div>
+      </div>
+    </div>
+
+    <div class="vs-label">VS</div>
+
+    <div class="image-box">
+      <div class="image-wrapper">
+        <img id="img2" class="choice-image" />
+      </div>
+      <div id="desc2" class="desc-box">
+        <div id="img2-title" class="image-title"></div>
+        <div id="img2-desc"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="winner" style="display: none;">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div>🏆 Your Favorite Cobubu Image!</div>
+      <img id="winner-img" src="" />
+      <div id="winner-desc">
+        <h2 id="winner-title"></h2>
+        <p id="winner-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 저장 중 표시 팝업 -->
+  <div id="saving-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+  background:#fff; padding:2vw 4vw; border-radius:1vw; font-size:1.5vw; box-shadow:0 0 20px rgba(0,0,0,0.3); z-index:999;">
+  saving...
+</div>
+
+<script>
+  const img1 = document.getElementById("img1");
+  const img2 = document.getElementById("img2");
+  const roundTitle = document.getElementById("round-title");
+
+  let fullImageList = [];
+  let roundImages = [];
+  let nextRound = [];
+  let bonusImage = null;
+  let descriptionData = {};
+  let currentIndex = 0;
+  let selectedGenre = "";
+  let clickLocked = false;
+  let isGameFinished = false;
+
+  const roundNames = {
+    2: "Final",
+    4: "Semifinals",
+    8: "Quarterfinals",
+    16: "Round of 16",
+    32: "Round of 32",
+    64: "Round of 64"
+  };
+
+  function loadImages(type) {
+    selectedGenre = type;
+
+    fetch("/json/imageListWorld.json")
+    .then(res => res.json())
+    .then(data => {
+      if (!data[type] || data[type].length < 2) {
+        alert("Not enough images to start the Worldcup.");
+        return;
+      }
+
+      fullImageList = data[type].map(filename =>
+    `/game_asset/worldcup/${type}/${encodeURIComponent(filename)}`
+    );
+
+      return fetch("/script.txt");
+    })
+    .then(res => res.text())
+    .then(text => {
+      const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).map(l => l.trim()).filter(l => l !== "");
+      for (let i = 0; i < lines.length; i += 3) {
+        const filename = lines[i];
+        const title = lines[i + 1] || "";
+        const desc = lines[i + 2] || "";
+        descriptionData[filename] = { title, desc };
+      }
+
+      startWorldcup();
+    })
+    .catch(err => {
+      console.error("❌ 데이터 불러오기 실패:", err);
+      alert("Failed to load data.");
+    });
+  }
+
+  window.loadImages = loadImages;
+
+  function startWorldcup() {
+    document.getElementById("genre-popup").style.display = "none";
+    document.getElementById("round-title").style.display = "block";
+    document.getElementById("image-container").style.display = "flex";
+        document.querySelector(".vs-label").style.display = "block"; // vs 라벨 보이게
+
+        roundImages = [...fullImageList];
+        nextRound = [];
+        bonusImage = null;
+        currentIndex = 0;
+        isGameFinished = false;
+
+        shuffle(roundImages);
+
+    // 홀수일 경우 맨 마지막 부전승
+        if (roundImages.length % 2 === 1) {
+          bonusImage = roundImages.pop();
+        }
+
+        updateTitle();
+        showImages();
+      }
+
+      function updateTitle() {
+        const remaining = roundImages.length;
+        const roundName = roundNames[remaining] || `Top ${remaining}`;
+        const totalMatches = Math.floor(remaining / 2);
+        const currentMatch = Math.floor(currentIndex / 2) + 1;
+
+        roundTitle.innerText = `Cobubu Worldcup - ${roundName} (${currentMatch}/${totalMatches})`;
+      }
+
+
+      function formatDescription(text) {
+        return text
+    .replace(/\.\s*"/g, '."\n"')   // . 다음에 " 오면 줄바꿈
+    .replace(/(?<!\.)\.(?!")/g, '.\n'); // 일반 마침표도 줄바꿈 (단 ".."과 ".") 제외
+  }
+
+  function showImages() {
+  // 🔒 이미 게임 종료되었으면 아무것도 하지 않음
+  if (isGameFinished) return;
+
+  // 결승전 체크: roundImages.length === 2이면 마지막 비교
+  if (roundImages.length === 2 && currentIndex === 0) {
+    roundTitle.innerText = "Cobubu Worldcup - Final (1/1)";
+  }
+
+  if (currentIndex >= roundImages.length) {
+    // 부전승 이미지 추가
+    if (bonusImage) {
+      nextRound.push(bonusImage);
+      bonusImage = null;
+    }
+
+    // 다음 라운드가 1개 이미지면 즉시 승자 표시
+    if (nextRound.length === 1) {
+      if (!isGameFinished) {
+        isGameFinished = true;
+        displayWinner(nextRound[0]);
+      }
+      return;
+    }
+
+    // 다음 라운드로 전환
+    roundImages = [...nextRound];
+    shuffle(roundImages);
+
+    // 홀수일 경우 부전승 처리
+    if (roundImages.length % 2 === 1) {
+      bonusImage = roundImages.pop();
+    }
+
+    nextRound = [];
+    currentIndex = 0;
+
+    // 다음 라운드가 결승전인지 다시 체크
+    if (roundImages.length === 2) {
+      roundTitle.innerText = "Cobubu Worldcup - Final (1/1)";
+    } else {
+      updateTitle();
+    }
+  }
+
+  // 이미지가 없으면 종료
+  if (roundImages.length < 2) {
+    if (roundImages.length === 1 && !isGameFinished) {
+      isGameFinished = true;
+      displayWinner(roundImages[0]);
+    }
+    return;
+  }
+
+  const imgA = roundImages[currentIndex];
+  const imgB = roundImages[currentIndex + 1];
+
+  img1.src = imgA;
+  img2.src = imgB;
+
+  const filenameA = decodeURIComponent(imgA.split("/").pop());
+  const filenameB = decodeURIComponent(imgB.split("/").pop());
+  const infoA = descriptionData[filenameA];
+  const infoB = descriptionData[filenameB];
+
+  document.getElementById("img1-title").innerText = infoA ? infoA.title : "";
+  document.getElementById("img1-desc").innerText = infoA ? formatDescription(infoA.desc) : "";
+  document.getElementById("img2-title").innerText = infoB ? infoB.title : "";
+  document.getElementById("img2-desc").innerText = infoB ? formatDescription(infoB.desc) : "";
+
+  const imageBoxes = document.querySelectorAll(".image-box");
+
+  img1.onclick = () => {
+    if (clickLocked || isGameFinished) return;
+    clickLocked = true;
+
+    if (!nextRound.includes(imgA)) nextRound.push(imgA);
+
+    animateSelection(
+      imageBoxes[0],
+      imageBoxes[1],
+      document.querySelector(".vs-label"),
+      () => {
+        currentIndex += 2;
+        // 결승전에서 선택 후 즉시 승자 확인
+        if (roundImages.length === 2 && currentIndex >= roundImages.length) {
+          isGameFinished = true;
+          displayWinner(imgA);
+        } else {
+          updateTitle();
+          showImages();
+        }
+        clickLocked = false;
+      }
+    );
+  };
+
+  img2.onclick = () => {
+    if (clickLocked || isGameFinished) return;
+    clickLocked = true;
+
+    if (!nextRound.includes(imgB)) nextRound.push(imgB);
+
+    animateSelection(
+      imageBoxes[1],
+      imageBoxes[0],
+      document.querySelector(".vs-label"),
+      () => {
+        currentIndex += 2;
+        // 결승전에서 선택 후 즉시 승자 확인
+        if (roundImages.length === 2 && currentIndex >= roundImages.length) {
+          isGameFinished = true;
+          displayWinner(imgB);
+        } else {
+          updateTitle();
+          showImages();
+        }
+        clickLocked = false;
+      }
+    );
+  };
+}
+
+function displayWinner(winnerImg) {
+  document.getElementById("image-container").style.display = "none";
+  document.getElementById("winner").style.display = "flex";
+
+  const winnerImage = document.getElementById("winner-img");
+  winnerImage.src = winnerImg;
+  winnerImage.style.display = "block";
+  roundTitle.innerText = "🏆 Final Winner!";
+
+  const filename = decodeURIComponent(winnerImg.split("/").pop());
+  const info = descriptionData[filename];
+
+  if (info) {
+    const formattedDesc = formatDescription(info.desc).replace(/\n/g, "<br>");
+    const descBox = document.getElementById("winner-desc");
+    descBox.innerHTML = `
+      <div style="margin-top: 2vw; font-size: 1.5vw;">
+        Your Favorite Cobubu <b>${selectedGenre}</b> image is <br>
+        <b>${info.title}</b><br>
+        <i>${formattedDesc}</i>
+      </div>
+    `;
+  } else {
+    console.warn("🛑 설명을 찾을 수 없음:", filename);
+  }
+
+  // ✅ 2초 후에 저장 및 이동 실행
+  setTimeout(() => saveWinnerToSheet(filename), 2000);
+}
+
+function saveWinnerToSheet(filename) {
+  document.getElementById("saving-popup").style.display = "flex";
+
+  const endpoint = "https://worldcup-rank.asivekr.workers.dev/";
+  const payload = { 
+    genre: selectedGenre,
+    filename: filename
+}; // 서버에서 filename 기반으로 저장
+console.log("전송할 filename (raw):", filename);
+console.log("전송할 filename (trim):", filename.trim());
+console.log("typeof filename:", typeof filename);
+console.log("char codes:", [...filename].map(c => c.charCodeAt(0)));
+
+
+fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(res => res.text())
+.then(result => {
+  console.log("✅ 스프레드시트 저장 성공:", result);
+
+    // 장르에 따라 리다이렉트
+  const redirectPage = selectedGenre === "movie" 
+  ? "worldcup_movie_rank.html" 
+  : "worldcup_jjal_rank.html";
+
+  location.href = redirectPage;
+})
+.catch(err => {
+  console.error("❌ 저장 실패:", err);
+  alert("결과 저장 실패! 다시 시도해주세요.");
+  document.getElementById("saving-popup").style.display = "none";
+});
+}
+
+
+
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+
+function startRandomColorAnimation(element) {
+  element._colorInterval = setInterval(() => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    element.style.color = `rgb(${r},${g},${b})`;
+  }, 50);
+}
+
+function stopRandomColorAnimation(element) {
+  clearInterval(element._colorInterval);
+  element.style.color = 'white';
+}
+
+  // 대상 span 요소 찾기
+const movieLabel = document.querySelector('#movieBtn .button-label');
+const jjalLabel = document.querySelector('#jjalBtn .button-label');
+
+  // 마우스 반짝임 이벤트 바인딩
+document.getElementById('movieBtn').addEventListener('mouseenter', () => startRandomColorAnimation(movieLabel));
+document.getElementById('movieBtn').addEventListener('mouseleave', () => stopRandomColorAnimation(movieLabel));
+document.getElementById('jjalBtn').addEventListener('mouseenter', () => startRandomColorAnimation(jjalLabel));
+document.getElementById('jjalBtn').addEventListener('mouseleave', () => stopRandomColorAnimation(jjalLabel));
+
+
+function animateSelection(winnerBox, loserBox, vsLabelEl, callback) {
+  // 1. 자연스럽게 사라지는 transition
+  loserBox.style.transition = 'opacity 0.5s ease';
+  vsLabelEl.style.transition = 'opacity 0.5s ease';
+  loserBox.style.opacity = '0';
+  vsLabelEl.style.opacity = '0';
+
+  // 2. winnerBox 고정 위치로 설정
+  const rect = winnerBox.getBoundingClientRect();
+  const clone = winnerBox.cloneNode(true);
+  const parent = winnerBox.parentNode;
+
+  clone.style.position = 'fixed';
+  clone.style.top = `${rect.top}px`;
+  clone.style.left = `${rect.left}px`;
+  clone.style.width = `${rect.width}px`;
+  clone.style.height = `${rect.height}px`;
+  clone.style.zIndex = '999';
+  clone.style.transition = 'all 0.5s ease';
+  clone.style.transform = 'none';
+
+  parent.appendChild(clone);
+  winnerBox.style.opacity = '0'; // 원본은 숨김
+
+  void clone.offsetWidth; // reflow
+
+  setTimeout(() => {
+    clone.style.top = '50%';
+    clone.style.left = '50%';
+    clone.style.transform = 'translate(-50%, -50%)';
+
+    setTimeout(() => {
+      // 초기화
+      loserBox.style.opacity = '';
+      vsLabelEl.style.opacity = '';
+      parent.removeChild(clone);
+      winnerBox.style.opacity = '';
+      callback();
+    }, 1000);
+  }, 10);
+}
+
+
+
+
+</script>
+<!-- 사이드바 추가 -->
+<button id="sidebar-toggle" onclick="toggleSidebar()">❯</button>
+<script src="/js/sidebar.js"></script>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-content">
+    <button onclick="location.href='/index'">🏠 Main</button>
+    <button onclick="location.href='/series'">✅ Series</button>
+    <button onclick="location.href='/museum'">🖼 Museum</button>
+    <button onclick="location.href='/game'">🎮 Game</button>
+  </div>
+</div>
+
+<!-- BGM 관련 요소들 -->
+<div id="bgm-container">
+  <button id="start-button">
+    <img id="bgm-icon" src="/img/BGM_ON.png" alt="BGM Icon">
+  </button>
+  <div class="bgm-label">BGM ON</div>
+  <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
+  <audio id="bgm-audio" src="/effect/bgm.mp3" autoplay loop></audio>
+</div>
+<img id="bgm-icon" src="/img/BGM_ON.png" style="display:none;" />
+<script src="/js/bgm.js" defer></script>
+</body>
+</html>

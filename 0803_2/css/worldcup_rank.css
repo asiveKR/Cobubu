@@ -1,0 +1,81 @@
+body {
+      font-family: 'Bitcount Single', sans-serif;
+      background-color: #f9f5f0;
+    }
+
+    h1 {
+      text-align: center; /* 제목 중앙 정렬 */
+      font-size: 3.25vw;
+    }
+    table {
+      width: 60vw;
+      border-collapse: collapse;
+      table-layout: fixed; /* 셀 너비 고정 */
+      margin: 0 auto; /* 테이블 중앙 정렬 */
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      height: 50px;
+      background-color: black;
+      color: white;
+    }
+    th:nth-child(1), td:nth-child(1) { /* Rank 열 */
+      width: 10%;
+    }
+    th:nth-child(2), td:nth-child(2) { /* Image 열 */
+      width: 15%; /* 이미지 셀 너비 축소 */
+    }
+    th:nth-child(3), td:nth-child(3) { /* Name 열 */
+      width: 60%;
+    }
+    th:nth-child(4), td:nth-child(4) { /* Votes 열 */
+      width: 15%;
+    }
+    .image-container {
+      width: 6vw;
+      height: 6vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto; /* 중앙 정렬 보장 */
+    }
+    .image-container img {
+      width: 6vw;
+      height: 6vw;
+      object-fit: contain;
+    }
+    #error-message {
+      color: red;
+      margin: 10px 0;
+      display: none;
+    }
+    /* 깜빡이는 효과 */
+    .blink-red {
+      animation: blinkRed 0.7s infinite;
+    }
+    .blink-orange {
+      animation: blinkOrange 0.7s infinite;
+    }
+    .blink-yellow {
+      animation: blinkYellow 0.7s infinite;
+    }
+    @keyframes blinkRed { /* 1st */
+      0%, 100% { background-color: #f9f5f0; }
+      50% { background-color: #f0d798; }
+    }
+
+    @keyframes blinkOrange { /* 2st */ 
+      0%, 100% { background-color: #f9f5f0; }
+      50% { background-color: #d6d6d6; }
+    }
+
+    @keyframes blinkYellow { /* 3st */
+      0%, 100% { background-color: #f9f5f0; }
+      50% { background-color: #e6bf98; }
+    }

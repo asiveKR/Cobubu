@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>Jjal Worldcup Ranking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/worldcup_rank.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/bgm.css?v=20250728_2">
+
+</head>
+<body>
+  <h1>Jjal Worldcup Ranking</h1>
+  <div id="error-message"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody id="ranking-body"></tbody>
+  </table>
+
+  <script>
+    const spreadsheetId = '1YixeLVMhSXN34LoR9hB8Tby9R6AIqERF5RfHxt5AVV8'; // jjal 스프레드시트 ID
+    const scriptUrl = '/script.txt';
+
+    async function fetchRankingData() {
+      try {
+        const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&gid=0`;
+
+        const [sheetRes, scriptRes] = await Promise.all([
+          fetch(sheetUrl).then(res => {
+            if (!res.ok) throw new Error(`Failed to fetch spreadsheet data: ${res.status}`);
+            return res.text();
+          }),
+          fetch(scriptUrl).then(res => {
+            if (!res.ok) throw new Error('Failed to fetch script.txt');
+            return res.text();
+          })
+        ]);
+
+        // Google Sheets JSON 파싱
+        const jsonMatch = sheetRes.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
+        if (!jsonMatch) throw new Error('Invalid spreadsheet JSON response');
+        const sheetData = JSON.parse(jsonMatch[1]);
+        console.log('sheetData:', sheetData);
+
+        if (!scriptRes || scriptRes.trim().length === 0) {
+          throw new Error('script.txt is empty or invalid');
+        }
+
+        // script.txt 파싱
+        const nameMap = {};
+        const lines = scriptRes.replace(/\uFEFF/, '').split(/\r?\n/).map(line => line.trim()).filter(line => line);
+        for (let i = 0; i < lines.length; i += 3) {
+          let filename = lines[i];
+          const name = lines[i + 1] || '(Unknown)';
+          if (filename) {
+            if (!filename.endsWith('.png')) {
+              filename = `${filename}.png`;
+            }
+            nameMap[filename] = name;
+          }
+        }
+        console.log('nameMap:', nameMap);
+
+        // 스프레드시트 데이터 처리
+        if (!sheetData.table || !Array.isArray(sheetData.table.rows)) {
+          throw new Error('Invalid spreadsheet data format');
+        }
+
+        const data = sheetData.table.rows.map(row => {
+          let filename = row.c[0]?.v || '';
+          if (!filename.endsWith('.png')) {
+            filename = `${filename}.png`;
+          }
+          const values = row.c.slice(1).map(cell => cell?.v).filter(val => val != null && val !== '');
+          return {
+            filename,
+            votes: values.length
+          };
+        }).filter(row => row.filename && row.filename.startsWith('etc_'));
+
+        // 득표수 순으로 정렬
+        const sorted = data.sort((a, b) => {
+          if (b.votes !== a.votes) return b.votes - a.votes;
+          const aNum = parseInt(a.filename.match(/#(\d+)/)?.[1] || a.filename.match(/(\d+)/)?.[1] || '0') || 0;
+          const bNum = parseInt(b.filename.match(/#(\d+)/)?.[1] || b.filename.match(/(\d+)/)?.[1] || '0') || 0;
+          return aNum - bNum;
+        });
+
+        console.log('sorted:', sorted);
+
+        const tbody = document.getElementById('ranking-body');
+        if (!tbody) {
+          throw new Error('ranking-body element not found');
+        }
+        tbody.innerHTML = '';
+
+        if (sorted.length === 0) {
+          const errorElement = document.getElementById('error-message');
+          if (errorElement) {
+            errorElement.textContent = 'No ranking data available for jjal genre.';
+            errorElement.style.display = 'block';
+          }
+          return;
+        }
+
+        sorted.forEach((entry, index) => {
+          const name = nameMap[entry.filename] || '(Unknown)';
+          const imgSrc = `/game_asset/worldcup/jjal/${encodeURIComponent(entry.filename)}`;
+          const rankClass = index === 0 ? 'blink-red' : index === 1 ? 'blink-orange' : index === 2 ? 'blink-yellow' : '';
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="${rankClass}">#${index + 1}</td>
+            <td><div class="image-container"><img src="${imgSrc}" alt="${name}" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; console.log('Image failed: ${imgSrc}');"></div></td>
+            <td>${name}</td>
+            <td>${entry.votes}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+      } catch (error) {
+        console.error('Error fetching ranking data:', error);
+        const errorElement = document.getElementById('error-message');
+        if (errorElement) {
+          errorElement.textContent = 'Failed to load ranking data. Please try again later.';
+          errorElement.style.display = 'block';
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchRankingData);
+  </script>
+
+  <!-- 사이드바 추가 -->
+  <button id="sidebar-toggle" onclick="toggleSidebar()">❯</button>
+  <script src="/js/sidebar.js"></script>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button onclick="location.href='/index'">🏠 Main</button>
+      <button onclick="location.href='/series'">✅ Series</button>
+      <button onclick="location.href='/museum'">🖼 Museum</button>
+      <button onclick="location.href='/game'">🎮 Game</button>
+    </div>
+  </div>
+
+<!-- BGM 관련 요소들 -->
+<div id="bgm-container">
+  <button id="start-button">
+    <img id="bgm-icon" src="/img/BGM_ON.png" alt="BGM Icon">
+  </button>
+  <div class="bgm-label">BGM ON</div>
+  <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
+  <audio id="bgm-audio" src="/effect/bgm.mp3" autoplay loop></audio>
+</div>
+<img id="bgm-icon" src="/img/BGM_ON.png" style="display:none;" />
+<script src="/js/bgm.js" defer></script>
+</body>
+</html>
