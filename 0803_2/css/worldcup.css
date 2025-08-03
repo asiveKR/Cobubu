@@ -168,7 +168,7 @@ h1 {
 
 .popup-description {
   max-width: 70vw;
-  font-size: 1.3em;
+  font-size: 0.8;
   line-height: 2;
   margin-top: 4vw;
   text-align: center;
@@ -197,3 +197,4 @@ h1 {
   white-space: pre-line; 
   word-break: keep-all;
 }
+
