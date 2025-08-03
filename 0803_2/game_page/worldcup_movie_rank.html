@@ -113,7 +113,7 @@
 
         sorted.forEach((entry, index) => {
           const name = nameMap[entry.filename] || '(Unknown)';
-          const imgSrc = `/game_asset/worldcup/movie/${encodeURIComponent(entry.filename)}`;
+          const imgSrc = `../game_asset/worldcup/movie/${encodeURIComponent(entry.filename)}`;
           const rankClass = index === 0 ? 'blink-red' : index === 1 ? 'blink-orange' : index === 2 ? 'blink-yellow' : '';
 
           const row = document.createElement('tr');
@@ -166,4 +166,5 @@
 </body>
 
 </html>
+
 
