@@ -17,11 +17,11 @@
     <!-- button -->
     <div class="popup-buttons">
       <button class="popup-button" id="movieBtn" onclick="loadImages('movie')">
-        <img src="game_asset/worldcup/movie.png" alt="Movie" class="button-bg" />
+        <img src="../game_asset/worldcup/movie.png" alt="Movie" class="button-bg" />
         <span class="button-label">Movie</span>
       </button>
       <button class="popup-button" id="jjalBtn" onclick="loadImages('jjal')">
-        <img src="game_asset/worldcup/jjal.png" alt="Jjal" class="button-bg" />
+        <img src="../game_asset/worldcup/jjal.png" alt="Jjal" class="button-bg" />
         <span class="button-label">Jjal</span>
       </button>
     </div>
@@ -108,7 +108,7 @@
   function loadImages(type) {
     selectedGenre = type;
 
-    fetch("/json/imageListWorld.json")
+    fetch("../json/imageListWorld.json")
     .then(res => res.json())
     .then(data => {
       if (!data[type] || data[type].length < 2) {
@@ -117,7 +117,7 @@
       }
 
       fullImageList = data[type].map(filename =>
-    `/game_asset/worldcup/${type}/${encodeURIComponent(filename)}`
+    `../game_asset/worldcup/${type}/${encodeURIComponent(filename)}`
     );
 
       return fetch("../script.txt");
@@ -479,6 +479,7 @@ function animateSelection(winnerBox, loserBox, vsLabelEl, callback) {
 <script src="../js/bgm.js" defer></script>
 </body>
 </html>
+
 
 
 
