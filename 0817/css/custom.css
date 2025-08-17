@@ -1,0 +1,695 @@
+/* =========
+   Design Tokens – Warm Light Theme
+   ========= */
+:root {
+    --bg: #f9f5f0;
+    --surface: #ffffff;
+    --surface-2: #f7f3ee;
+    --line: #eadfd4;
+    --text: #2b2a28;
+    --muted: #8b837b;
+    --brand: #ff7a59;
+    --accent: #3aa981;
+    --shadow: 0 4px 10px rgba(43, 42, 40, .07), 0 1px 3px rgba(43, 42, 40, .04);
+    --btn-shadow: 0.3vmin 0.3vmin 0.5vmin rgba(0, 0, 0, 0.3);
+    --popup-shadow: 0.5vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.4);
+    --radius: 1vmin;
+    --radius-sm: 0.7vmin;
+    --radius-lg: 1.2vmin;
+    --font: "Bitcount Single", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* =========
+   Global
+   ========= */
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 1vmin;
+}
+
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    gap: 1vmin;
+}
+
+h1 {
+    font-size: clamp(3.5vmin, 2vw, 2vmin);
+    letter-spacing: 0.02vmin;
+    margin: 10;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8vmin;
+}
+
+/* =========
+   App layout
+   ========= */
+.app {
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    gap: 1vmin;
+    min-height: 0;
+    flex: 1;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1vmin;
+    box-shadow: var(--shadow);
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vmin;
+}
+
+/* 스크롤 컨테이너 */
+.scroll-container {
+    max-height: 80vh;
+    overflow-y: scroll;
+    /* 항상 스크롤바 표시 */
+    padding: 0.5vmin;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    scrollbar-width: thin;
+    /* Firefox용 */
+    scrollbar-color: var(--muted) var(--surface);
+}
+
+/* 스크롤바 커스터마이징 */
+.scroll-container::-webkit-scrollbar {
+    width: 0.8vmin;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+    background: var(--brand);
+}
+
+/* =========
+   Buttons – Modern flat
+   ========= */
+button {
+    font-family: var(--font);
+    font-weight: 700;
+    letter-spacing: 0.02vmin;
+}
+
+.btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text);
+    padding: 2.25vmin 3vmin;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .2s ease, color .2s ease;
+    box-shadow: var(--shadow);
+    width: 100%;
+    text-align: center;
+    font-size: 2.25vmin;
+    outline: none;
+}
+
+.btn:hover {
+    transform: translateY(-0.1vmin);
+    box-shadow: 0 0.7vmin 1.4vmin rgba(43, 42, 40, .1);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 0.1vmin 0.2vmin rgba(43, 42, 40, .08) inset;
+}
+
+.btn:focus-visible {
+    outline: none;
+}
+
+/* Stage actions 및 팝업 버튼 스타일 */
+.stage-actions .btn,
+.popup-btn {
+    background: #000;
+    color: #fff;
+    box-shadow: var(--btn-shadow);
+}
+
+.stage-actions .btn:hover,
+.popup-btn:hover {
+    transform: translateY(-0.1vmin);
+    box-shadow: 0 0.5vmin 1vmin rgba(0, 0, 0, 0.4);
+    animation: rainbow-text 0.8s steps(8) infinite;
+}
+
+.stage-actions .btn:active,
+.popup-btn:active {
+    transform: translateY(0.1vmin) translateX(0.1vmin);
+    box-shadow: 0 0.1vmin 0.2vmin rgba(0, 0, 0, 0.5) inset;
+}
+
+/* 팝업 버튼 세로 크기 */
+.popup-btn {
+    padding: 1.5vmin 1.7vmin;
+    font-size: 1.25vmin;
+}
+
+/* Stage actions */
+.stage-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1vmin;
+    width: 22.5vmin;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0.6vmin;
+}
+
+.tab-btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--text);
+    padding: 0.84vmin 1.26vmin;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, transform .12s, box-shadow .12s;
+    outline: none;
+    font-size: 1.4vmin;
+}
+
+.tab-btn[aria-selected="true"] {
+    background: #fff1ec;
+    border-color: color-mix(in lab, var(--brand) 40%, var(--line));
+    box-shadow: 0 0 0 0.2vmin color-mix(in lab, var(--brand) 18%, transparent);
+}
+
+.tab-btn:hover {
+    transform: translateY(-0.1vmin);
+}
+
+/* Subpart chips */
+.subparts {
+    margin-top: 0.8vmin;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6vmin;
+}
+
+.sub-btn {
+    appearance: none;
+    background: #fff;
+    border: 1px dashed var(--line);
+    color: #4a4744;
+    padding: 0.6vmin 1.05vmin;
+    border-radius: 999px;
+    font-size: 1.35vmin;
+    cursor: pointer;
+    transition: .2s;
+    outline: none;
+}
+
+.sub-btn[aria-selected="true"] {
+    border-style: solid;
+    border-color: var(--brand);
+    color: var(--brand);
+    background: #fff7f4;
+}
+
+.sub-btn:hover {
+    transform: translateY(-0.1vmin);
+}
+
+/* 썸네일 */
+.thumbs {
+    margin-top: 0.8vmin;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 0.8fr));
+    gap: 0.7vmin;
+}
+
+.thumb {
+    width: 100%;
+    max-width: 21.6vmin;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #fff;
+    outline: none;
+}
+
+.thumb:hover {
+    transform: translateY(-0.2vmin);
+    box-shadow: 0 0.7vmin 1.4vmin rgba(43, 42, 40, .1);
+}
+
+.thumb img {
+    width: 135%;
+    height: 135%;
+    object-fit: cover;
+    object-position: center top;
+    user-drag: none;
+    -webkit-user-drag: none;
+}
+
+.thumb .cap {
+    position: absolute;
+    left: 0.4vmin;
+    top: 0.4vmin;
+    background: #2b2a28;
+    color: #fff;
+    padding: 0.2vmin 0.4vmin;
+    border-radius: 0.4vmin;
+    font-size: 1.4vmin;
+    opacity: .75;
+}
+
+/* =========
+   Stage (Preview)
+   ========= */
+.stage-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15vmin;
+}
+
+.stage-content {
+    display: flex;
+    align-items: center;
+    gap: 3vmin;
+    justify-content: center;
+}
+
+.stage-text {
+    width: 100%;
+    background: rgba(128, 128, 128, 0.3);
+    padding: 1.6vmin 3vmin;
+    font-size: 2.4vmin;
+    font-weight: 600;
+    animation: color-cycle 1s linear infinite; 
+    overflow: hidden;
+    position: relative;
+    line-height: 2.8vmin;
+    height: 4.8vmin;
+}
+
+.stage-text .scrolling-text {
+    display: inline-block;
+    animation: scroll-text 5s linear infinite;
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    top: 1.6vmin;
+    -webkit-text-stroke: 0.005vmin #2b2a28; /* 글자에 검정 외곽선 추가 */
+    text-stroke: 0.005vmin #2b2a28; /* 표준 속성, 호환성용 */
+}
+
+.stage {
+    position: relative;
+    width: min(50vmin, 80vw);
+    aspect-ratio: 1/1;
+    background: radial-gradient(40vmin 26vmin at 50% 25%, #ffffff 0%, #cccccc 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    padding: 0;
+}
+
+.grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, rgba(255, 122, 89, .08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(58, 169, 129, .08) 1px, transparent 1px);
+    background-size: 2.8vmin 2.8vmin;
+    pointer-events: none;
+}
+
+.layer {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+}
+
+.layer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(1.3);
+    user-drag: none;
+    -webkit-user-drag: none;
+}
+
+#L-NICKNAME {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 1vmin;
+}
+
+#L-NICKNAME span {
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 2vmin;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 42, 40, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 2.1vmin;
+    box-shadow: var(--popup-shadow);
+    border: 0.3vmin solid #2b2a28;
+    max-width: 70vmin;
+    width: 90%;
+    min-height: 30vmin;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vmin;
+    align-items: center;
+}
+
+.nickname-popup-content {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 2.1vmin;
+    box-shadow: var(--popup-shadow);
+    border: 0.3vmin solid #2b2a28;
+    max-width: 49vmin; 
+    width: 83%; 
+    min-height: 23vmin;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5vmin;
+    align-items: center;
+}
+
+.popup-preview {
+    width: 50%;
+    aspect-ratio: 1/1;
+    background: #fff;
+    border: 0.5vmin solid #2b2a28;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+    transform-origin: top;
+    box-shadow: inset 0.3vmin 0.3vmin 0.6vmin rgba(0, 0, 0, 0.3), inset -0.3vmin -0.3vmin 0.6vmin rgba(0, 0, 0, 0.3), 0.3vmin 0.3vmin 0.6vmin rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-drag: none;
+    -webkit-user-drag: none;
+}
+
+.popup-caption {
+    font-family: var(--font);
+    font-size: 1.5vmin;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text);
+    margin: 0;
+    white-space: nowrap;
+}
+
+.nickname-popup-content .popup-caption {
+    font-size: 2.25vmin; /* 1.5vmin * 1.5 = 50% 증가 */
+}
+
+.popup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1vmin;
+    width: 100%;
+}
+
+.nickname-input {
+    width: 100%;
+    padding: 1vmin;
+    font-family: var(--font);
+    font-size: 2.25vmin; /* 1.5vmin * 1.5 = 50% 증가 */
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    outline: none;
+}
+
+.nickname-input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 0.2vmin color-mix(in lab, var(--brand) 18%, transparent);
+}
+
+.nickname-popup-content .popup-btn {
+    font-size: 1.875vmin; /* 1.25vmin * 1.5 = 50% 증가 */
+}
+
+/* Empty state */
+.empty {
+    opacity: .8;
+    text-align: center;
+    border: 1px dashed var(--line);
+    border-radius: 0.8vmin;
+    padding: 1.2vmin;
+    background: #fff;
+    color: var(--muted);
+}
+
+.hint {
+    color: black;
+    font-size: 1.3vmin;
+    margin-top: 0.4vmin;
+}
+
+/* =========
+   Animations
+   ========= */
+@keyframes rainbow-text {
+    0% {
+        color: #ff3b30;
+    }
+
+    12.5% {
+        color: #34c759;
+    }
+
+    25% {
+        color: #007aff;
+    }
+
+    37.5% {
+        color: #af52de;
+    }
+
+    50% {
+        color: #ffd60a;
+    }
+
+    62.5% {
+        color: #a2845e;
+    }
+
+    75% {
+        color: #ff8a00;
+    }
+
+    87.5% {
+        color: #00c7be;
+    }
+
+    100% {
+        color: #ff3b30;
+    }
+}
+
+@keyframes color-cycle {
+    0% { color: #ff0000; } /* 빨강 */
+    50% { color: #ffa500; } /* 주황 */
+    100% { color: #ff0000; } /* 빨강 */
+}
+
+@keyframes scroll-text {
+    0% {
+        transform: translateX(110%);
+    }
+
+    100% {
+        transform: translateX(-210%);
+    }
+}
+
+/* =========
+   Responsive
+   ========= */
+@media (max-width: 860px) {
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    .stage-wrap {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 3vmin;
+        /* 모바일에서도 간격 증가 */
+    }
+
+    .stage-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2vmin;
+    }
+
+    .stage-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .thumbs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .thumb {
+        max-width: 16.2vmin;
+        /* 18vmin에서 10% 축소 */
+    }
+
+    .stage {
+        width: min(60vmin, 90vw);
+    }
+
+    .btn {
+        padding: 1vmin 1.5vmin;
+        font-size: 1.2vmin;
+    }
+
+    .stage-actions {
+        width: 100%;
+    }
+
+    .popup-content {
+        max-width: 90vmin;
+        min-height: 25vmin;
+        gap: 0.2vmin;
+    }
+
+    .nickname-popup-content {
+        max-width: 63vmin; 
+        min-height: 25vmin;
+        gap: 5vmin;
+    }
+
+    .popup-btn {
+        padding: 1.125vmin 1.5vmin;
+        font-size: 0.1vmin;
+    }
+
+    .nickname-popup-content .popup-btn {
+        font-size: 0.15vmin; 
+    }
+
+    .popup-caption {
+        font-size: 1.2vmin;
+    }
+
+    .nickname-popup-content .popup-caption {
+        font-size: 1.2vmin; 
+    }
+
+    .stage-text {
+        padding: 1vmin 2vmin;
+        font-size: 1.8vmin;
+        line-height: 2.2vmin;
+        height: 3.6vmin;
+    }
+
+    .stage-text .scrolling-text {
+        top: 1vmin;
+    }
+
+    .thumb .cap {
+        font-size: 1vmin;
+    }
+
+    .tab-btn {
+        padding: 0.6vmin 0.9vmin;
+        font-size: 1vmin;
+    }
+
+    .sub-btn {
+        padding: 0.4vmin 0.7vmin;
+        font-size: 0.9vmin;
+    }
+
+    .scroll-container {
+        max-height: 70vh;
+    }
+
+    .nickname-input {
+        font-size: 1.8vmin; /* 1.2vmin * 1.5 = 50% 증가 */
+        padding: 0.8vmin;
+    }
+
+    #L-NICKNAME span {
+        font-size: 1.5vmin;
+    }
+}

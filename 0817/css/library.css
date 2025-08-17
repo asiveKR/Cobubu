@@ -1,0 +1,627 @@
+/* hidden 속성 강제 숨김(안전장치) */
+[hidden] {
+  display: none !important;
+}
+
+
+
+
+
+:root {
+  --paper1: #f9f5f0;
+  --ink: #2e1d0e;
+  --accent: #a66b35;
+  --accent2: #d2b48c;
+  --flip-duration: 1.25s; 
+  --flip-ease: cubic-bezier(.15,.7,.15,1);
+}
+
+body {
+  background-color: var(--paper1);
+  text-align: center;
+  padding: 30px;
+  font-family: "Bitcount Single", system-ui, sans-serif;
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 64px);
+  font-weight: 400;
+  margin: 0 auto 10px;
+  white-space: nowrap;
+}
+
+.lib-separator {
+  border: none;
+  height: 3px;
+  background: #ccc;
+  width: min(92vw, 1200px);
+  margin: 18px auto 18px;
+}
+
+.topbar {
+  width: min(92vw, 1200px);
+  margin: 0 auto 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+button.ghost {
+  background: none;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  justify-self: end;
+}
+
+.lang-switch .lang-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+  background: rgba(255, 255, 255, .5);
+  font-family: "Bitcount Single", system-ui, sans-serif;
+}
+
+.lang-switch .lang-btn.active {
+  background: rgba(255, 255, 255, .9);
+}
+
+/* novel 카드 그리드 */
+.novel-grid {
+  width: min(92vw, 1200px);
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(45vw, 420px), 1fr));
+  /* 더 작은 크기로 조정하여 정사각형 배치 최적화 */
+  gap: clamp(16px, 3vw, 32px);
+  /* 간격 */
+}
+
+.novel-caption {
+  font-family: "Bitcount Single", system-ui, sans-serif;
+  font-size: clamp(14px, 2.2vw, 18px);
+  margin: 4px 0 6px;
+}
+
+.novel-item {
+  position: relative;
+  width: clamp(300px, 36vw, 450px);
+  aspect-ratio: 1/1;
+  /* 정사각형 비율로 변경 */
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
+  perspective: 1000px;
+  /* 3D 회전용 */
+}
+
+/* 원본 이미지 */
+.novel-art {
+  position: absolute;
+  inset: 0;
+  /* ← 표지와 100% 동일 크기 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  box-sizing: border-box;
+}
+
+/* 덮개(표지) – 이미지와 정확히 동일한 크기 */
+.book-cover {
+  position: absolute;
+  inset: 0;
+  /* ← 크기 불일치 원천 차단 */
+  border-radius: inherit;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #a87342, #6c4422);
+  border: 8px solid #d8c6a6;
+  /* 테두리 */
+  box-shadow: inset -3px 0 0 rgba(255, 255, 255, .7), 0 3px 10px rgba(0, 0, 0, .25);
+  cursor: pointer;
+
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform .65s cubic-bezier(.2, .7, .2, 1);
+  backface-visibility: hidden;
+}
+
+/* 책등(스파인) */
+.book-cover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, .25), rgba(255, 255, 255, .25));
+  border-radius: 8px 0 0 8px;
+}
+
+/* 3D 느낌 살짝 */
+.novel-item:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.novel-item:active {
+  transform: scale(0.98);
+}
+
+/* ── 책 하드커버(밑판) ── */
+.novel-item::before {
+  content: "";
+  position: absolute;
+  top: 4%;
+  left: 2%;
+  width: 96%;
+  height: 92%;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #a36d3f, #6b3f1e);
+  box-shadow: inset -3px 0 0 rgba(255, 255, 255, 0.8),
+    /* 페이지 두께 */
+    inset 3px 0 0 rgba(255, 255, 255, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  /* 클릭 방지 */
+  opacity: 0.4;
+  /* 반투명하게 해서 아래 이미지 보이게 */
+}
+
+.novel-item::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 4%;
+  width: 10px;
+  height: 92%;
+  background: repeating-linear-gradient(to bottom, #f7f2e7 0 3px, #ece7dc 3px 6px);
+  border-radius: 0 10px 10px 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, .2));
+}
+
+/* 접근성: 모션 줄임 */
+@media (prefers-reduced-motion:reduce) {
+  .book-cover {
+    transition: none;
+  }
+}
+
+/* 열림 상태 */
+.novel-item.open .book-cover {
+  transform: rotateY(-160deg);
+  pointer-events: none;
+  /* 열렸을 때 뒤 이미지 클릭 통과 */
+}
+
+/* ── 표지 이미지 ── */
+.novel-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* 전체 높이 채우기 */
+  object-fit: cover;
+  aspect-ratio: 1/1;
+  /* 정사각형 비율 */
+  border-radius: 6px;
+}
+
+.novel-title {
+  font-family: "Bitcount Single", system-ui, sans-serif;
+  font-size: clamp(20px, 3.5vw, 40px);
+  text-align: center;
+  margin: 0;
+  /* 상단 행 중앙 정렬 */
+}
+
+.novel-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.topbar {
+  width: min(92vw, 1200px);
+  margin: 0 auto 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  /* ⬅ Back | Title | Lang */
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+/* 챕터 카드(하위) */
+.cap-grid {
+  width: min(92vw, 1200px);
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(44vw, 360px), 1fr));
+  gap: clamp(14px, 3vw, 24px);
+}
+
+.cap-item {
+  appearance: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: clamp(8px, 1.6vw, 16px);
+  border-radius: 14px;
+  transition: transform .1s ease, box-shadow .1s ease;
+  /* 0.18s → 0.1s로 단축 */
+  position: relative;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
+}
+
+.cap-item:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.cap-item:active {
+  transform: scale(0.98);
+}
+
+.cap-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #fffdf5;
+  border: 9px double #bfa980;
+  box-shadow: inset 0 0 4px rgba(255, 255, 240, .4), 0 6px 15px rgba(0, 0, 0, .25);
+}
+
+.cap-title {
+  margin-top: clamp(8px, 1.2vw, 14px);
+  font-size: clamp(16px, 2.6vw, 24px);
+  color: #3b2a1c;
+}
+
+/* 팝업 오버레이 */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .8);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 16px;
+}
+
+/* 카드 배경 유지 + 세로 레이아웃 + 내부 스크롤 분리 */
+.popup-content {
+
+  background: linear-gradient(135deg, #a66b35 0%, #d2b48c 100%);
+  color: var(--ink);
+  width: min(92vw, 820px);
+  max-height: 90vh;
+  border-radius: 16px;
+  padding: clamp(14px, 2vw, 22px);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+.popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: rgba(255, 255, 255, .6);
+  font-size: 20px;
+  border-radius: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.popup img {
+  width: min(40vw, 720px);
+  height: auto;
+  max-height: 40vh;
+  object-fit: contain;
+}
+
+.popup h3 {
+  margin: 4px 0 10px;
+  font-size: clamp(18px, 2.4vw, 26px);
+}
+
+/* 이미지만 가운데 정렬 */
+#popup-img {
+  align-self: center;
+  /* ← flex 컨테이너에서 가로축 가운데 */
+  display: block;
+}
+
+/* 텍스트는 가로로 꽉 차게 */
+#popup-title,
+.story-scroll {
+  align-self: stretch;
+}
+
+/*  본문 스크롤은 여기서만 설정 */
+.story-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(90vh - 200px);
+  /* 이미지+제목 높이 감안해 여유 */
+  text-align: left;
+  font-family: system-ui, sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  background: rgba(255, 255, 255, .5);
+  padding: clamp(10px, 1.6vw, 16px);
+  border-radius: 10px;
+}
+
+.story-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.story-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, .25);
+  border-radius: 8px;
+}
+
+
+.book-layout {
+  width: min(92vw, 1200px);
+  margin: 0 auto 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1800px; /* 3D 책 효과 */
+  position: relative;
+}
+
+
+
+
+.book-page {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #3b2a1c; /* 더 진한 색상, 두께 증가 */
+  position: relative;
+}
+
+
+
+
+.page-turn {
+  position: absolute;
+  bottom: 20px;
+  padding: 10px 20px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.page-turn.prev {
+  left: 20px; /* 왼쪽 아래 */
+}
+
+.page-turn.next {
+  right: 20px; /* 오른쪽 아래 */
+}
+
+.page-turn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 책 컨테이너 */
+#flipbook {
+  width: 80vw;
+  height: calc(80vw * 0.75);
+  max-width: 1200px;
+  max-height: 900px;
+  margin: 0 auto;
+  position: relative;
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+#flipbook::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(0,0,0,0.3);
+  z-index: 15;
+  transform: translateX(-50%);
+  display: none; /* 첫 페이지에서 숨김 */
+}
+
+#flipbook.spread::after {
+  display: block; /* 이중 페이지에서 표시 */
+}
+
+/* 페이지 기본 스타일 */
+#flipbook .page {
+  width: 50%;
+  height: 90%;
+  background: #fffdf5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  box-sizing: border-box;
+}
+
+/* 첫 페이지 (오른쪽 단일 커버) */
+#flipbook .page.empty-page.book-cover {
+  width: 50%; /* 오른쪽 페이지 크기 */
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  box-shadow: 
+    inset -15px 0 30px -10px rgba(0,0,0,0.4),
+    10px 0 20px rgba(0,0,0,0.5),
+    0 10px 20px rgba(0,0,0,0.3);
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  z-index: 10;
+  border: 2px solid #6B3F1E;
+  border-radius: 0 8px 8px 0; /* 오른쪽만 둥글게 */
+  margin-left: auto; /* 오른쪽 정렬 */
+}
+
+#flipbook .page.empty-page.book-cover::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 60px;
+  background: #c00;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0% 100%);
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+  z-index: 11;
+}
+
+#flipbook .page.empty-page.book-cover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.5) 0%, 
+    rgba(0,0,0,0.3) 70%, 
+    transparent 100%);
+  transform: translateZ(15px);
+}
+
+/* 마지막 페이지 (흰색) */
+#flipbook .page.empty-page.back-cover {
+  background: #fffdf5;
+  box-shadow: 
+    inset 0 0 30px rgba(0,0,0,0.05),
+    0 0 0 1px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+/* 펼쳐진 페이지 텍스처 */
+#flipbook .spread .page:not(.empty-page) {
+  background: 
+    linear-gradient(to bottom, 
+      rgba(0,0,0,0.03) 0%, 
+      rgba(0,0,0,0) 10%,
+      rgba(0,0,0,0) 90%,
+      rgba(0,0,0,0.03) 100%),
+    repeating-linear-gradient(to bottom, 
+      #f9f5f0 0px, 
+      #f9f5f0 23px, 
+      rgba(0,0,0,0.04) 24px);
+}
+
+/* 페이지 그림자 */
+#flipbook .page.even {
+  box-shadow: inset -10px 0 15px -5px rgba(0,0,0,0.15), inset 1px 0 0 rgba(0,0,0,0.05);
+}
+
+#flipbook .page.odd {
+  box-shadow: inset 10px 0 15px -5px rgba(0,0,0,0.15), inset -1px 0 0 rgba(0,0,0,0.05);
+}
+
+/* 챕터 아이템 */
+#flipbook .cap-item {
+  width: 85%;
+  height: 85%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* 챕터 타이틀 */
+.cap-title {
+  font-family: "Bitcount Single", system-ui, sans-serif;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700;
+  color: #3b2a1c;
+  margin-top: 12px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #a66b35, #d2b48c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; /* 텍스처 호환성 */
+  padding: 4px 8px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* 텍스처 호환성 대체 */
+@supports not (-webkit-background-clip: text) {
+  .cap-title {
+    color: #3b2a1c;
+    background: none;
+    text-shadow: none;
+    border: 1px solid #a66b35;
+  }
+}
+
+/* 페이지 넘기기 컨트롤 */
+.page-turn {
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+  position: absolute;
+  bottom: 20px;
+  z-index: 100;
+}
+
+.page-turn.prev {
+  left: 20px;
+}
+
+.page-turn.next {
+  right: 20px;
+}
+
+.page-turn:hover {
+  background: rgba(0,0,0,0.7);
+  transform: scale(1.05);
+}
+
+.page-turn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

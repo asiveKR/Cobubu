@@ -1,0 +1,320 @@
+{
+  "generated_at": "2025-08-17 02:56:50",
+  "asset_base": "custom_asset",
+  "parts": {
+    "HEAD": {
+      "base": [
+        "custom_asset/head/head1.png",
+        "custom_asset/head/단발 head.png",
+        "custom_asset/head/대머리 head.png",
+        "custom_asset/head/바가지 head.png",
+        "custom_asset/head/반삭 head.png",
+        "custom_asset/head/사자보이즈 민트 head-Photoroom.png",
+        "custom_asset/head/사자보이즈 보라 head-Photoroom.png",
+        "custom_asset/head/사자보이즈 연보라 head-Photoroom.png",
+        "custom_asset/head/사자보이즈 핑크 head-Photoroom.png",
+        "custom_asset/head/쉼표 head.png",
+        "custom_asset/head/아줌마머리 head.png",
+        "custom_asset/head/헤이야치 head.png"
+      ],
+      "EMOTION": [
+        "custom_asset/head/emotion/emotion1.png",
+        "custom_asset/head/emotion/x emotion-Photoroom.png",
+        "custom_asset/head/emotion/울음 emotion-Photoroom.png",
+        "custom_asset/head/emotion/웃음 emotion-Photoroom.png",
+        "custom_asset/head/emotion/잠 emotion-Photoroom.png",
+        "custom_asset/head/emotion/하트 emotion-Photoroom.png",
+        "custom_asset/head/emotion/화남 emotion-Photoroom.png"
+      ]
+    },
+    "BODY": {
+      "base": [
+        "custom_asset/body/body1.png",
+        "custom_asset/body/거지 body (2).png",
+        "custom_asset/body/검정 body.png",
+        "custom_asset/body/남색 body.png",
+        "custom_asset/body/멜빵 body-Photoroom.png",
+        "custom_asset/body/멜빵 검갈 body-Photoroom.png",
+        "custom_asset/body/멜빵 황토 body-Photoroom.png",
+        "custom_asset/body/빨강 body.png",
+        "custom_asset/body/야성 body-Photoroom.png",
+        "custom_asset/body/저승사자 body-Photoroom.png",
+        "custom_asset/body/저승사자 무대 body-Photoroom.png",
+        "custom_asset/body/저승사자 회색 버전 body.png",
+        "custom_asset/body/저승사자 흰색 버전 body-Photoroom.png",
+        "custom_asset/body/정장 body-Photoroom.png",
+        "custom_asset/body/치어리더 노랑 body.png",
+        "custom_asset/body/치어리더 파랑 body.png",
+        "custom_asset/body/치어리더 핑크 body.png",
+        "custom_asset/body/파자마 body.png",
+        "custom_asset/body/파자마 블루 body.png",
+        "custom_asset/body/회색 body.png",
+        "custom_asset/body/휴가룩 body.png",
+        "custom_asset/body/휴가룩 블루 body.png"
+      ]
+    },
+    "ACC": {
+      "base": [
+        "custom_asset/acc/acc1.png",
+        "custom_asset/acc/별 acc-Photoroom.png",
+        "custom_asset/acc/빨강 선글라스 acc-Photoroom.png",
+        "custom_asset/acc/선글라스 acc-Photoroom.png",
+        "custom_asset/acc/쌍담 acc-Photoroom.png",
+        "custom_asset/acc/악마2 acc-Photoroom.png",
+        "custom_asset/acc/악마 acc-Photoroom.png",
+        "custom_asset/acc/안경 선글라스 acc-Photoroom.png",
+        "custom_asset/acc/천사링 acc-Photoroom.png",
+        "custom_asset/acc/칼 acc-Photoroom.png",
+        "custom_asset/acc/파란 선글라스 acc-Photoroom.png"
+      ]
+    }
+  },
+  "tree": {
+    "name": "custom_asset",
+    "type": "dir",
+    "children": [
+      {
+        "name": "acc",
+        "type": "dir",
+        "children": [
+          {
+            "name": "acc1.png",
+            "type": "file"
+          },
+          {
+            "name": "별 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "빨강 선글라스 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "선글라스 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "쌍담 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "악마2 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "악마 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "안경 선글라스 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "천사링 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "칼 acc-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "파란 선글라스 acc-Photoroom.png",
+            "type": "file"
+          }
+        ]
+      },
+      {
+        "name": "body",
+        "type": "dir",
+        "children": [
+          {
+            "name": "body1.png",
+            "type": "file"
+          },
+          {
+            "name": "거지 body (2).png",
+            "type": "file"
+          },
+          {
+            "name": "검정 body.png",
+            "type": "file"
+          },
+          {
+            "name": "남색 body.png",
+            "type": "file"
+          },
+          {
+            "name": "멜빵 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "멜빵 검갈 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "멜빵 황토 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "빨강 body.png",
+            "type": "file"
+          },
+          {
+            "name": "야성 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "저승사자 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "저승사자 무대 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "저승사자 회색 버전 body.png",
+            "type": "file"
+          },
+          {
+            "name": "저승사자 흰색 버전 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "정장 body-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "치어리더 노랑 body.png",
+            "type": "file"
+          },
+          {
+            "name": "치어리더 파랑 body.png",
+            "type": "file"
+          },
+          {
+            "name": "치어리더 핑크 body.png",
+            "type": "file"
+          },
+          {
+            "name": "파자마 body.png",
+            "type": "file"
+          },
+          {
+            "name": "파자마 블루 body.png",
+            "type": "file"
+          },
+          {
+            "name": "회색 body.png",
+            "type": "file"
+          },
+          {
+            "name": "휴가룩 body.png",
+            "type": "file"
+          },
+          {
+            "name": "휴가룩 블루 body.png",
+            "type": "file"
+          }
+        ]
+      },
+      {
+        "name": "head",
+        "type": "dir",
+        "children": [
+          {
+            "name": "emotion",
+            "type": "dir",
+            "children": [
+              {
+                "name": "emotion1.png",
+                "type": "file"
+              },
+              {
+                "name": "x emotion-Photoroom.png",
+                "type": "file"
+              },
+              {
+                "name": "울음 emotion-Photoroom.png",
+                "type": "file"
+              },
+              {
+                "name": "웃음 emotion-Photoroom.png",
+                "type": "file"
+              },
+              {
+                "name": "잠 emotion-Photoroom.png",
+                "type": "file"
+              },
+              {
+                "name": "하트 emotion-Photoroom.png",
+                "type": "file"
+              },
+              {
+                "name": "화남 emotion-Photoroom.png",
+                "type": "file"
+              }
+            ]
+          },
+          {
+            "name": "eyes",
+            "type": "dir",
+            "children": []
+          },
+          {
+            "name": "hat",
+            "type": "dir",
+            "children": []
+          },
+          {
+            "name": "head1.png",
+            "type": "file"
+          },
+          {
+            "name": "단발 head.png",
+            "type": "file"
+          },
+          {
+            "name": "대머리 head.png",
+            "type": "file"
+          },
+          {
+            "name": "바가지 head.png",
+            "type": "file"
+          },
+          {
+            "name": "반삭 head.png",
+            "type": "file"
+          },
+          {
+            "name": "사자보이즈 민트 head-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "사자보이즈 보라 head-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "사자보이즈 연보라 head-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "사자보이즈 핑크 head-Photoroom.png",
+            "type": "file"
+          },
+          {
+            "name": "쉼표 head.png",
+            "type": "file"
+          },
+          {
+            "name": "아줌마머리 head.png",
+            "type": "file"
+          },
+          {
+            "name": "헤이야치 head.png",
+            "type": "file"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,128 @@
+
+body {
+  font-family: "Bitcount Single", system-ui;
+  background: #f5f5f5;
+  padding: 2vw;
+  margin: 0;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  margin-left: 5vw;
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 35vw;
+  margin-left: 5vw;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+th, td {
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+th:nth-child(1), td:nth-child(1) {
+  width: 80px;
+}
+
+th:nth-child(2), td:nth-child(2) {
+  width: 350px;  
+}
+
+th:nth-child(3), td:nth-child(3) {
+  width: 90px;
+}
+
+th:nth-child(4), td:nth-child(4) {
+  width: 80px;
+}
+
+tr:nth-child(odd) { background-color: #ffffff; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+
+td.owner {
+  font-family: "Bitcount Single", system-ui, monospace;
+  text-align: left;
+  white-space: pre;
+}
+
+.info-popup {
+  position: fixed;
+  top: 250px;
+  left: 46vw;  
+  width: 200px;
+  background-color: #ffffff;
+  border: 2px solid #333;
+  padding: 10px;
+  font-family: "Bitcount Single", sans-serif;
+  color: #111;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: top 0.3s ease-out;
+}
+
+.info-popup h2 {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.info-popup p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.award-container {
+  position: fixed;
+  top: 100px;
+  left: 60vw;  /* info-popup보다 오른쪽 */
+  width: 530px;
+  max-width: none;
+  z-index: 900;
+}
+
+.award-img {
+  width: 100%;
+  display: block;
+}
+
+.award-title {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Bitcount Single", system-ui;
+  font-size: 22px;
+  background-color: rgba(0,0,0,0.1);
+  color: black;
+  font-weight: bold;
+  z-index: 900;
+  text-align: center;
+  white-space: nowrap; 
+}
+
+.award-label {
+  position: absolute;
+  font-size: 14px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: none;
+  white-space: nowrap;  
+  color: black;
+}
+
+#rank-1 { top: -22px; left: 140px; }
+#rank-2 { top: 70px; left: -60px; }
+#rank-3 { top: 110px; left: 340px; }
+
+.rank-table {
+  position: relative;
+  z-index: 999;
+}
